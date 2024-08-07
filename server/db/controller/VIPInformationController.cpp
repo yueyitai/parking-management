@@ -84,7 +84,18 @@ std::string VIPInformationController::VIPCharge(cJSON data){
         cJSON* start_time_json = cJSON_GetObjectItem(&data, "start_time");
         if(vip.getEndTime() > std::string(cJSON_Print(start_time_json))){//可能会有问题，不知道能不能这样比较
             throw std::runtime_error("还在VIP期间！");
-            return nullptr;
+            return "FAIL";
+        }else {
+            cJSON* end_time_json = cJSON_GetObjectItem(&data, "end_time");
+            cJSON* owner_name_json = cJSON_GetObjectItem(&data, "owner_name");
+            cJSON* owner_telephone_json = cJSON_GetObjectItem(&data, "owner_telephone");
+            vip.setLicencePlate(std::string(cJSON_Print(licence_plate_json)));
+            vip.setStartTime(std::string(cJSON_Print(start_time_json)));
+            vip.setEndTime(std::string(cJSON_Print(end_time_json)));
+            vip.setOwnerName(std::string(cJSON_Print(owner_name_json)));
+            vip.setOwnerTelephone(std::string(cJSON_Print(owner_telephone_json)));
+            dao->updateVIPInformation(vip);
+            return std::string("SUCCESS");
         }
     }
     catch(const std::exception& e)
@@ -92,7 +103,7 @@ std::string VIPInformationController::VIPCharge(cJSON data){
         std::cerr << e.what() << '\n';
         return nullptr;
     }
-    
+    return "FAIL";
 }
 
 //test
