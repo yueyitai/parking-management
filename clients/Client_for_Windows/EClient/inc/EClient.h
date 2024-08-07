@@ -12,16 +12,17 @@ class EClient : public QObject
 public:
     enum OptCode
     {
-        ECLIENT_GET_ALL_INFO = 101,
-        ECLIENT_INSERT_ONE_INFO,
-        ECLIENT_QUERY_ONE_INFO_BY_ID,
-        ECLIENT_UPDATE_ONE_INFO_BY_ID
+        ECLIENT_GET_ALL_INFO = 101,      //接受全部信息
+        ECLIENT_INSERT_ONE_INFO,       //插入单条员工信息
+        ECLIENT_QUERY_ONE_INFO_BY_ID,  //根据id查询单条员工信息
+        ECLIENT_UPDATE_ONE_INFO_BY_ID  //根据id更新单条员工信息
     };
 
 public:
     EClient(QObject *parent = nullptr);
     ~EClient();
-    bool operateDatabase(OptCode optCode, QString &recvBuf, const QString &data = QString());
+    bool operateDatabase(OptCode optCode, QString *recvBuf = nullptr , const QString &data = QString());
+
 
 private:
     enum ResponseResultCode
