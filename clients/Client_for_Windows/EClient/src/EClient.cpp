@@ -22,12 +22,13 @@ EClient::~EClient()
     }
 }
 
-bool EClient::operateDatabase(OptCode optCode, QString &recvBuf, const QString &data)
+bool EClient::operateDatabase(OptCode optCode, QString * recvBuf , const QString &data)
+
 {
     Request request;
     switch (optCode)
     {
-    case ECLIENT_GETALLINFO:
+    case ECLIENT_GET_ALL_INFO:
         request = { optCode, "EClientGetAllInfo", "null" };
         break;
     case ECLIENT_INSERT_ONE_INFO:
@@ -54,12 +55,28 @@ bool EClient::operateDatabase(OptCode optCode, QString &recvBuf, const QString &
     Response response;
     analyzeResponse(responseStr, response);
 
-    if (response.resultCode == RESPONSE_RESULT_SUCCESS) {
-        recvBuf = response.data;
+//    if (response.resultCode == RESPONSE_RESULT_SUCCESS) {
+//        recvBuf = response.data;
+//        return true;
+//    }
+    switch (response.resultCode)
+    {
+    case RESPONSE_RESULT_SUCCESS:
+    {
+        if(recvBuf != nullptr)
+        {
+            *recvBuf = response.data;
+        }
         return true;
+        break;
     }
+    case RESPONSE_RESULT_FAIL:
+    {
 
-    return false;
+        return false;
+        break;
+    }
+    }
 }
 
 void EClient::formatRequest(QString &requestStr, const Request &request)
@@ -130,7 +147,7 @@ bool EClient::recvResponse(QString &responseStr)
     }
 
     responseStr = QString::fromUtf8(responseBuf);
-    qDebug()<<responseStr;
+    qDebug().noquote()<<responseStr;
     return true;
 }
 
@@ -143,7 +160,7 @@ void EClient::analyzeResponse(const QString &responseStr, Response &response)
     QJsonObject jsonBody = jsonRoot["body"].toObject();
 
     response.result = jsonHeader["result"].toString();
-    response.resultCode = static_cast<ResponseResultCode>(jsonHeader["result_code"].toInt());
+    response.resultCode = static_cast<ResponseResultCode>(jsonHeader["result_code"].toInt());//返回成功或失败   成功100，失败200
     response.opt = jsonHeader["opt"].toString();
     response.optCode = static_cast<OptCode>(jsonHeader["opt_code"].toInt());
     response.data = jsonBody["data"].toString();
