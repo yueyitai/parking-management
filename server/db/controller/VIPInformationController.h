@@ -1,5 +1,5 @@
 #pragma once
-#include "../model/VIPInformationDAO.h"
+#include "VIPInformationDAO.h"
 #include "cJSON.h"
 
 #include <string>
