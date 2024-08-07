@@ -24,5 +24,7 @@ public:
 
     //充值
     std::string VIPCharge(cJSON data);
+
+    //test
 };
 

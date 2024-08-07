@@ -47,3 +47,5 @@ std::string VIPInformationController::VIPRegister(cJSON data){
 std::string VIPInformationController::VIPCharge(cJSON data){
 
 }
+
+//test
