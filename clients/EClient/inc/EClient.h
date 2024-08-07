@@ -12,7 +12,7 @@ class EClient : public QObject
 public:
     enum OptCode
     {
-        ECLIENT_GETALLINFO = 101,
+        ECLIENT_GET_ALL_INFO = 101,
         ECLIENT_INSERT_ONE_INFO,
         ECLIENT_QUERY_ONE_INFO_BY_ID,
         ECLIENT_UPDATE_ONE_INFO_BY_ID
