@@ -21,4 +21,6 @@ public:
     //修改一条记录
     bool updateaddAd_information_formation(Ad_information_formation ad);
 
+    //根据ID查询一条记录
+    Ad_information_formation getAd_information_formationById(int id);
 };

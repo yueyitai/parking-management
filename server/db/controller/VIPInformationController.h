@@ -1,11 +1,13 @@
 #pragma once
 #include "VIPInformationDAO.h"
-#include "cJSON.h"
+//#include "cJSON.h"
 
 #include <string>
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+
+#include "nlohmann/json.hpp"
 
 class VIPInformationController
 {
@@ -18,13 +20,13 @@ public:
     ~VIPInformationController();
 
     //登录
-    std::string VIPLogin(cJSON data);
+    std::string VIPLogin(std::string data);
 
     //注册
-    std::string VIPRegister(cJSON data);
+    std::string VIPRegister(std::string data);
 
     //充值
-    std::string VIPCharge(cJSON data);
+    std::string VIPCharge(std::string data);
 
     //test
 };

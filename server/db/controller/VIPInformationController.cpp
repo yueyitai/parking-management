@@ -13,97 +13,85 @@ VIPInformationController::~VIPInformationController()
 
 
 //登录
-std::string VIPInformationController::VIPLogin(cJSON data){
-    cJSON* root = cJSON_CreateObject();
-    try
-    {
-        cJSON* licencePlateJSON = cJSON_GetObjectItem(&data, "licence_plate");
-        if(licencePlateJSON == NULL){
-            throw std::runtime_error("JSON解析失败！");  
-            return nullptr;
-        }
-        VIPInformation vip(dao->searchwithLicence(std::string(cJSON_Print(licencePlateJSON))));
-        if(vip.getId() == -1){
-            return nullptr;
-        }
-        cJSON_AddStringToObject(root, "owner_name", vip.getOwnerName().c_str());
-        cJSON_AddStringToObject(root, "owner_telephone", vip.getOwnerTelephone().c_str());
-    }
-    catch(const std::exception& e)
-    {
+std::string VIPInformationController::VIPLogin(std::string data){
+    // 使用 nlohmann/json 解析传入的 JSON 字符串  
+    try{
+        auto jsonData = nlohmann::json::parse(data);  
+        std::string licencePlate = jsonData.at("licence_plate").get<std::string>();  
+        // 使用车牌号查询 VIP 信息  
+        VIPInformation vip = dao->searchwithLicence(licencePlate); 
+        if (vip.getId() != -1) { //查到了
+            std::string ownerName = jsonData.at("owner_name").get<std::string>();
+            std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
+            if(vip.getOwnerName() == ownerName && vip.getOwnerTelephone() == ownerTelephone){
+                return "SUCCESS";  
+            }else{
+                return "FAIL";  
+            }
+        } else {  //没查到
+            return "FAIL";  
+        }  
+    }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
         return nullptr;
     }
-    std::string ret = cJSON_Print(root);
-    return ret;
+
 }
 
 //注册
-std::string VIPInformationController::VIPRegister(cJSON data){
-    cJSON* root = cJSON_CreateObject();
+std::string VIPInformationController::VIPRegister(std::string data){
     try{
-        cJSON* licence_plate_json = cJSON_GetObjectItem(&data, "licence_plate");
-        if(licence_plate_json == NULL){
-            throw std::runtime_error("JSON解析失败！");
-            return nullptr;
-        }
-        VIPInformation vip(dao->searchwithLicence(std::string(cJSON_Print(licence_plate_json))));
-        if(vip.getId() == -1){
-            cJSON* start_time_json = cJSON_GetObjectItem(&data, "start_time");
-            cJSON* end_time_json = cJSON_GetObjectItem(&data, "end_time");
-            cJSON* owner_name_json = cJSON_GetObjectItem(&data, "owner_name");
-            cJSON* owner_telephone_json = cJSON_GetObjectItem(&data, "owner_telephone");
-            vip.setLicencePlate(std::string(cJSON_Print(licence_plate_json)));
-            vip.setStartTime(std::string(cJSON_Print(start_time_json)));
-            vip.setEndTime(std::string(cJSON_Print(end_time_json)));
-            vip.setOwnerName(std::string(cJSON_Print(owner_name_json)));
-            vip.setOwnerTelephone(std::string(cJSON_Print(owner_telephone_json)));
+        auto jsonData = nlohmann::json::parse(data);  
+        std::string licencePlate = jsonData.at("licence_plate").get<std::string>();  
+        // 使用车牌号查询 VIP 信息  
+        VIPInformation vip = dao->searchwithLicence(licencePlate);
+        if (vip.getId() != -1) { //查到了
+            return "FAIL";
+        }else{  //没查到
+            std::string ownerName = jsonData.at("owner_name").get<std::string>();
+            std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
+            std::string start_time = "0000-00-00";
+            std::string end_time = "0000-00-00";
+            vip.setOwnerName(ownerName);
+            vip.setOwnerTelephone(ownerTelephone);
+            vip.setStartTime(start_time);
+            vip.setEndTime(end_time);
+            vip.setLicencePlate(licencePlate);
             dao->addVIPInformation(vip);
-            return std::string("SUCCESS");
+            return "SUCCESS";
         }
-        return std::string("FAIL");
-    }
-    catch(const std::exception& e){
+    }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr;
+        return nullptr;        
     }
-    return std::string("FAIL");
 }
 
 //充值
-std::string VIPInformationController::VIPCharge(cJSON data){
-    cJSON* root = cJSON_CreateObject();
-    try
-    {
-        cJSON* licence_plate_json = cJSON_GetObjectItem(&data, "licence_plate");
-        if(licence_plate_json == NULL){
-            throw std::runtime_error("JSON解析失败！");
-            return nullptr;
-        }
-        VIPInformation vip(dao->searchwithLicence(std::string(cJSON_Print(licence_plate_json))));
-        cJSON* start_time_json = cJSON_GetObjectItem(&data, "start_time");
-        if(vip.getEndTime() > std::string(cJSON_Print(start_time_json))){//可能会有问题，不知道能不能这样比较
-            throw std::runtime_error("还在VIP期间！");
+std::string VIPInformationController::VIPCharge(std::string data){
+    try{
+        auto jsonData = nlohmann::json::parse(data);  
+        std::string licencePlate = jsonData.at("licence_plate").get<std::string>();
+        // 使用车牌号查询 VIP 信息  
+        VIPInformation vip = dao->searchwithLicence(licencePlate);
+        std::string startTime = jsonData.at("start_time").get<std::string>();
+        if(vip.getEndTime() > startTime){
             return "FAIL";
-        }else {
-            cJSON* end_time_json = cJSON_GetObjectItem(&data, "end_time");
-            cJSON* owner_name_json = cJSON_GetObjectItem(&data, "owner_name");
-            cJSON* owner_telephone_json = cJSON_GetObjectItem(&data, "owner_telephone");
-            vip.setLicencePlate(std::string(cJSON_Print(licence_plate_json)));
-            vip.setStartTime(std::string(cJSON_Print(start_time_json)));
-            vip.setEndTime(std::string(cJSON_Print(end_time_json)));
-            vip.setOwnerName(std::string(cJSON_Print(owner_name_json)));
-            vip.setOwnerTelephone(std::string(cJSON_Print(owner_telephone_json)));
+        }else{
+            std::string endTime = jsonData.at("end_time").get<std::string>();
+            std::string ownerName = jsonData.at("owner_name").get<std::string>();
+            std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
+            vip.setLicencePlate(licencePlate);
+            vip.setStartTime(startTime);
+            vip.setEndTime(endTime);
+            vip.setOwnerName(ownerName);
+            vip.setOwnerTelephone(ownerTelephone);
             dao->updateVIPInformation(vip);
-            return std::string("SUCCESS");
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-    }
-    catch(const std::exception& e)
-    {
+            return "SUCCESS";
+        }
+    }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr;
+        return nullptr;        
     }
-    return "FAIL";
 }
 
 //test
