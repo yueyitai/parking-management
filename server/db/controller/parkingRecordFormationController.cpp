@@ -12,25 +12,42 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
 }
 
     //使用
-    std::string ParkingRecordFormationController::usePark(cJSON data){
-        cJSON* root;
+    std::string ParkingRecordFormationController::usePark(std::string data){
+        nlohmann::json j;
         try
         {
+            std::string path;
+            std::string licencePlate;
+            int time;
+
             //解析json
-            cJSON* licencePlateJSON = cJSON_GetObjectItem(&data, "licence_plate");
-            cJSON* timeJSON = cJSON_GetObjectItem(&data, "time");
-            cJSON* pathJSON = cJSON_GetObjectItem(&data, "path");
-            if(licencePlateJSON == NULL || timeJSON == NULL || pathJSON == NULL){
-                throw std::runtime_error("JSON解析失败！");  
-                return nullptr;
+            nlohmann::json dataJSON = nlohmann::json::parse(data);
+            if (dataJSON.contains("path") && dataJSON["path"].is_string()){
+                path = dataJSON["path"].get<std::string>();
+            }else {
+                throw std::runtime_error("path字段不存在或不是字符串！");
             }
-            ParkingRecordFormation record(dao->searchWithLicence(std::string(licencePlateJSON->valuestring)));
+
+            if (dataJSON.contains("licence_plate") && dataJSON["licence_plate"].is_string()){
+                licencePlate = dataJSON["licence_plate"].get<std::string>();
+            }else {
+                throw std::runtime_error("licence_plate字段不存在或不是字符串！");
+            }
+
+            nlohmann::json dataJSON = nlohmann::json::parse(data);
+            if (dataJSON.contains("time") && dataJSON["time"].is_number_integer()){
+                time = dataJSON["time"].get<int>();
+            }else {
+                throw std::runtime_error("time字段不存在或不是整数！");
+            }
+
+            ParkingRecordFormation record(dao.get()->searchWithLicence(licencePlate));
             if(record.getId() == -1){//入场
-                record.setLicencePlate(std::string(cJSON_Print(licencePlateJSON)));
-                record.setEnterParkingTime(timeJSON->valueint);
-                record.setEnterPicPath(std::string(pathJSON->valuestring));
-                dao->addParkingRecordFormation(record);
-                cJSON_AddNumberToObject(root, "time", 0);
+                record.setLicencePlate(licencePlate);
+                record.setEnterParkingTime(time);
+                record.setEnterPicPath(path);
+                dao.get()->addParkingRecordFormation(record);
+                j["time"] = 0;
             }else{//出场
                 EmployeeInformationFormationDAO employeeDAO;
                 VIPInformationDAO vipDAO;
@@ -38,24 +55,28 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 EmployeeInformationFormation employee = employeeDAO.searchWithLicence(licencePlate);
                 VIPInformation vip = vipDAO.searchwithLicence(licencePlate);
                 if(employee.getId() == -1 && vip.getId() == -1){//需要收钱
-                    cJSON_AddNumberToObject(root, "time", record.getEnterParkingTime());
-                    cJSON_AddNumberToObject(root, "flag", 0);
+                    j["time"] = record.getEnterParkingTime();
+                    j["flag"] = 0;
                 }else{//不需要收钱
-                    cJSON_AddNumberToObject(root, "time", record.getEnterParkingTime());
-                    cJSON_AddNumberToObject(root, "flag", 1);
+                    j["time"] = record.getEnterParkingTime();
+                    j["flag"] = 1;
                 }
                 record.setIsDelete(0);
-                record.setOutParkingTime(timeJSON->valueint);
-                record.setOutPicPath(std::string(pathJSON->valuestring));
+                record.setOutParkingTime(time);
+                record.setOutPicPath(path);
 
-                dao->updateParkingRecordFormation(record);
+                dao.get()->updateParkingRecordFormation(record);
             }
+        }
+        catch (const nlohmann::json::parse_error& e) {
+            // 捕获并处理 JSON 解析错误
+            std::cerr << "JSON parse error: " << e.what() << '\n';
         }
         catch(const std::exception& e)
         {
             std::cerr << e.what() << '\n';
             return nullptr;
         }
-        std::string ret = root->valuestring;
+        std::string ret = j.dump();
         return ret;
     }
