@@ -1,6 +1,18 @@
 #include <EmployeeInformationFormationDAO.h>
 
 
+inline bool openDb(sqlite3 *db)
+{
+
+    // 打开数据库连接
+    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+
 EmployeeInformationFormationDAO::EmployeeInformationFormationDAO(/* args */)
 {
 }
@@ -25,7 +37,7 @@ std::vector<EmployeeInformationFormation> EmployeeInformationFormationDAO::getAl
     std::string sql = "SELECT * FROM Employee_information_form";  
   
     // 编译SQL语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
         // 如果编译失败，关闭数据库并抛出异常  
         sqlite3_close(db);  
         if (errorMessage) {  
@@ -84,7 +96,7 @@ bool EmployeeInformationFormationDAO::addEmployeeInformationFormation(EmployeeIn
     std::string sql = "INSERT INTO Employee_information_form (name, gender, age, hir_time, phone, licence_plate) VALUES (?, ?, ?, ?, ?, ?)";  
   
     // 编译SQL语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
         // 如果编译失败，关闭数据库并抛出异常  
         sqlite3_close(db);  
         if (errorMessage) {  
@@ -131,7 +143,7 @@ bool EmployeeInformationFormationDAO::updateWithId(EmployeeInformationFormation 
   
     // 准备SQL语句  
     std::string sql = "UPDATE Employee_information_form SET name=?, gender=?, age=?, hir_time=?, phone=?, licence_plate=? WHERE id=?";  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
         sqlite3_close(db);  
         if (errorMessage) {  
             std::string errorMsg(errorMessage);  
@@ -258,14 +270,3 @@ EmployeeInformationFormation EmployeeInformationFormationDAO::searchWithLicence(
     return employee; 
 }
 
-inline bool openDb(sqlite3 *db)
-{
-
-    // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
-    {
-        return false;
-    }
-    else
-        return true;
-}

@@ -1,5 +1,12 @@
 #include "adInfomationFormationController.h"
 
+    AdInformationFormationController::AdInformationFormationController(Ad_information_formationDAO* dao) : dao(dao){
+
+    }
+    AdInformationFormationController::~AdInformationFormationController(){
+
+    }
+
 //1、插入单条广告信息
 std::string AdInformationFormationController::insertAdInformationFormation(std::string data){
     try{

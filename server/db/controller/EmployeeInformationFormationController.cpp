@@ -1,5 +1,9 @@
 #include "EmployeeInformationFormationController.h"
 
+EmployeeInformationFormationController::EmployeeInformationFormationController(EmployeeInformationFormationDAO *dao) : dao(dao){
+    
+}
+
     //获取所有员工
     std::string EmployeeInformationFormationController::getAllEmployee(){
         // 使用 nlohmann/json 库来创建 JSON 数组

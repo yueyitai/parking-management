@@ -1,6 +1,7 @@
 #include "parkingRecordFormationController.h"
 
 
+
 ParkingRecordFormationController::ParkingRecordFormationController(ParkingRecordFormationDAO* dao) : dao(dao)
 {
     
@@ -34,7 +35,6 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 throw std::runtime_error("licence_plate字段不存在或不是字符串！");
             }
 
-            nlohmann::json dataJSON = nlohmann::json::parse(data);
             if (dataJSON.contains("time") && dataJSON["time"].is_number_integer()){
                 time = dataJSON["time"].get<int>();
             }else {

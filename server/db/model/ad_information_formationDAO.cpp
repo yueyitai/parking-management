@@ -1,5 +1,17 @@
 #include "ad_information_formationDAO.h"
 
+inline bool openDb(sqlite3 *db)
+{
+
+    // 打开数据库连接
+    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+
     //返回整张表
     std::vector<Ad_information_formation> Ad_information_formationDAO::getAll(){
         sqlite3 *db;  
@@ -16,7 +28,7 @@
         std::string sql = "SELECT * FROM ad_information_form";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
             // 如果编译失败，关闭数据库并抛出异常  
             sqlite3_close(db);  
             if (errorMessage) {  
@@ -72,7 +84,7 @@
         std::string sql = "INSERT INTO ad_information_form (name, start_time, expirat_date, content, phone) VALUES (?, ?, ?, ?, ?)";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
             // 如果编译失败，关闭数据库并抛出异常  
             sqlite3_close(db);  
             if (errorMessage) {  
@@ -122,7 +134,7 @@
         std::string sql = "DELETE FROM ad_information_form WHERE id=?";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
             // 如果编译失败，关闭数据库并抛出异常  
             sqlite3_close(db);  
             if (errorMessage) {  
@@ -166,7 +178,7 @@
 
         // 准备SQL语句  
         std::string sql = "UPDATE ad_information_form SET name=?, start_time=?, expirat_date=?, content=?, phone=? WHERE id=?";  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
             sqlite3_close(db);  
             if (errorMessage) {  
                 std::string errorMsg(errorMessage);  
@@ -200,19 +212,9 @@
         return true;  
     }
 
-    inline bool openDb(sqlite3 *db)
-{
 
-    // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
-    {
-        return false;
-    }
-    else
-        return true;
-}
 
-Ad_information_formation getAd_information_formationById(int id){
+Ad_information_formation Ad_information_formationDAO::getAd_information_formationById(int id){
 
     // 打开数据库连接
     sqlite3 *db;

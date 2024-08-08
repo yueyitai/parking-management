@@ -1,5 +1,17 @@
 #include <VIPInformationDAO.h>
 
+inline bool openDb(sqlite3 *db)
+{
+
+    // 打开数据库连接
+    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+
 
 VIPInformationDAO::VIPInformationDAO(/* args */)
 {
@@ -24,7 +36,7 @@ VIPInformation VIPInformationDAO::searchwithLicence(const std::string licence_pl
     std::string sql = "SELECT * FROM VIP_information_table WHERE licence_plate=?";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         // 错误处理：无法准备SQL语句  
         sqlite3_close(db);  
@@ -74,7 +86,7 @@ bool VIPInformationDAO::updateVIPInformation(const VIPInformation vip){
     std::string sql = "UPDATE parking_record_form SET licence_plate=?, start_time=?, end_time=?, owner_name=?, owner_telephone=? WHERE id=?";  
   
     // 准备SQL语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
@@ -128,7 +140,7 @@ bool VIPInformationDAO::addVIPInformation(const VIPInformation vip){
     std::string sql = "INSERT INTO parking_record_form (licence_plate, start_time, end_time, owner_name, owner_telephone) VALUES (?, ?, ?, ?, ?)";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
@@ -168,14 +180,3 @@ bool VIPInformationDAO::addVIPInformation(const VIPInformation vip){
     return true;  
 }
 
-inline bool openDb(sqlite3 *db)
-{
-
-    // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
-    {
-        return false;
-    }
-    else
-        return true;
-}

@@ -14,6 +14,8 @@ class EmployeeInformationFormationController
 private:
     std::shared_ptr<EmployeeInformationFormationDAO> dao;
 public:
+    EmployeeInformationFormationController(EmployeeInformationFormationDAO *dao);
+
     typedef std::shared_ptr<EmployeeInformationFormationController> ptr;
     //获取所有员工
     std::string getAllEmployee();

@@ -1,6 +1,18 @@
 
 #include <parkingRecordFormationDAO.h>
 
+inline bool openDb(sqlite3 *db)
+{
+
+    // 打开数据库连接
+    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+
 bool ParkingRecordFormationDAO::addParkingRecordFormation(ParkingRecordFormation record)
 {
     sqlite3 *db;  
@@ -17,7 +29,7 @@ bool ParkingRecordFormationDAO::addParkingRecordFormation(ParkingRecordFormation
     std::string sql = "INSERT INTO parking_record_form (licence_plate, enter_parking_time, enter_pic_path) VALUES (?, ?, ?)";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
@@ -69,7 +81,7 @@ bool ParkingRecordFormationDAO::updateParkingRecordFormation(ParkingRecordFormat
     std::string sql = "UPDATE parking_record_form SET out_parking_time=?, is_delete=?, out_pic_path=? WHERE id=?";  
   
     // 准备SQL语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
@@ -120,7 +132,7 @@ ParkingRecordFormation ParkingRecordFormationDAO::searchWithLicence(const std::s
     std::string sql = "SELECT * FROM parking_record_form WHERE licence_plate=? AND is_delete=1";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
     {  
         // 错误处理：无法准备SQL语句  
         sqlite3_close(db);  
@@ -167,14 +179,3 @@ ParkingRecordFormation ParkingRecordFormationDAO::searchWithId(int id)
 {
 }
 
-inline bool openDb(sqlite3 *db)
-{
-
-    // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
-    {
-        return false;
-    }
-    else
-        return true;
-}
