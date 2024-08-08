@@ -14,7 +14,7 @@ VIPInformationController::~VIPInformationController()
 
 //登录
 std::string VIPInformationController::VIPLogin(cJSON data){
-    cJSON* root;
+    cJSON* root = cJSON_CreateObject();
     try
     {
         cJSON* licencePlateJSON = cJSON_GetObjectItem(&data, "licence_plate");
@@ -40,7 +40,7 @@ std::string VIPInformationController::VIPLogin(cJSON data){
 
 //注册
 std::string VIPInformationController::VIPRegister(cJSON data){
-    cJSON* root;
+    cJSON* root = cJSON_CreateObject();
     try{
         cJSON* licence_plate_json = cJSON_GetObjectItem(&data, "licence_plate");
         if(licence_plate_json == NULL){
@@ -72,7 +72,7 @@ std::string VIPInformationController::VIPRegister(cJSON data){
 
 //充值
 std::string VIPInformationController::VIPCharge(cJSON data){
-    cJSON* root;
+    cJSON* root = cJSON_CreateObject();
     try
     {
         cJSON* licence_plate_json = cJSON_GetObjectItem(&data, "licence_plate");
@@ -96,7 +96,7 @@ std::string VIPInformationController::VIPCharge(cJSON data){
             vip.setOwnerTelephone(std::string(cJSON_Print(owner_telephone_json)));
             dao->updateVIPInformation(vip);
             return std::string("SUCCESS");
-        }
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     }
     catch(const std::exception& e)
     {
