@@ -117,7 +117,7 @@ ParkingRecordFormation ParkingRecordFormationDAO::searchWithLicence(const std::s
         throw std::runtime_error("打开数据库失败");
     }  
   
-    std::string sql = "SELECT * FROM parking_record_form WHERE licence_plate=? AND is_delete=0";  
+    std::string sql = "SELECT * FROM parking_record_form WHERE licence_plate=? AND is_delete=1";  
   
     // 准备语句  
     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, &errorMessage) != SQLITE_OK)  

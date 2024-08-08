@@ -19,5 +19,7 @@ public:
     bool updateWithId(EmployeeInformationFormation employee);
     //根据id查询数据
     EmployeeInformationFormation searchWithId(int id);
+    //根据车牌查询数据
+    EmployeeInformationFormation searchWithLicence(std::string licence_plate);
 };
 
