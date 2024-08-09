@@ -23,8 +23,8 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
 
             //解析json
             nlohmann::json dataJSON = nlohmann::json::parse(data);
-            if (dataJSON.contains("path") && dataJSON["path"].is_string()){
-                path = dataJSON["path"].get<std::string>();
+            if (dataJSON.contains("image") && dataJSON["image"].is_string()){
+                path = dataJSON["image"].get<std::string>();
             }else {
                 throw std::runtime_error("path字段不存在或不是字符串！");
             }
