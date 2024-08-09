@@ -13,7 +13,7 @@
 class ParkingRecordFormationController
 {
 private:
-    std::shared_ptr<ParkingRecordFormationDAO> dao;
+    ParkingRecordFormationDAO* dao;
 public:
     ParkingRecordFormationController(ParkingRecordFormationDAO* dao);
     ~ParkingRecordFormationController();

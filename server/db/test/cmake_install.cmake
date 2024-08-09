@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/e/yueqian/project/parkingManagement/parking-management/server
+# Install script for directory: /home/uther/yueqian/parking-management/server
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/test/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/uther/yueqian/parking-management/server/db/test/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

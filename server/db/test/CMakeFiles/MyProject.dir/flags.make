@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/controller -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/tools
+C_INCLUDES = -I/home/uther/yueqian/parking-management/server/db/controller -I/home/uther/yueqian/parking-management/server/db/model -I/home/uther/yueqian/parking-management/server/tools
 
 C_FLAGS = 
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/controller -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model -I/mnt/e/yueqian/project/parkingManagement/parking-management/server/tools
+CXX_INCLUDES = -I/home/uther/yueqian/parking-management/server/db/controller -I/home/uther/yueqian/parking-management/server/db/model -I/home/uther/yueqian/parking-management/server/tools
 
 CXX_FLAGS = -std=gnu++11
 

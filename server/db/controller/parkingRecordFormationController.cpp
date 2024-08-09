@@ -41,19 +41,23 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 throw std::runtime_error("time字段不存在或不是整数！");
             }
 
-            ParkingRecordFormation record(dao.get()->searchWithLicence(licencePlate));
+            ParkingRecordFormation record(dao->searchWithLicence(licencePlate));
             if(record.getId() == -1){//入场
                 record.setLicencePlate(licencePlate);
                 record.setEnterParkingTime(time);
                 record.setEnterPicPath(path);
-                dao.get()->addParkingRecordFormation(record);
+                dao->addParkingRecordFormation(record);
                 j["time"] = 0;
+                j["flag"] = 0;
             }else{//出场
                 EmployeeInformationFormationDAO employeeDAO;
                 VIPInformationDAO vipDAO;
                 std::string licencePlate = record.getLicencePlate();
+                std::cout << "test5" << std::endl;
                 EmployeeInformationFormation employee = employeeDAO.searchWithLicence(licencePlate);
+                std::cout << "test6" << std::endl;
                 VIPInformation vip = vipDAO.searchwithLicence(licencePlate);
+                std::cout << "test7" << std::endl;
                 if(employee.getId() == -1 && vip.getId() == -1){//需要收钱
                     j["time"] = record.getEnterParkingTime();
                     j["flag"] = 0;
@@ -64,8 +68,9 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 record.setIsDelete(0);
                 record.setOutParkingTime(time);
                 record.setOutPicPath(path);
+            std::cout << "test" << std::endl;
 
-                dao.get()->updateParkingRecordFormation(record);
+                dao->updateParkingRecordFormation(record);
             }
         }
         catch (const nlohmann::json::parse_error& e) {
@@ -75,7 +80,7 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
         catch(const std::exception& e)
         {
             std::cerr << e.what() << '\n';
-            return nullptr;
+            return "FAIL";
         }
         std::string ret = j.dump();
         return ret;

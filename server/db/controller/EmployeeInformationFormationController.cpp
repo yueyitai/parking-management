@@ -11,8 +11,8 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
         try
         {
             std::vector<EmployeeInformationFormation> vec;
-            vec = dao.get()->getAll();
-
+            // vec = dao.get()->getAll();
+            vec = dao->getAll();
             // 遍历 vector，将每个 EmployeeInformationFormation 对象添加到 JSON 数组中
             for (const auto& employee : vec) {
                 jArray.push_back({
@@ -41,13 +41,14 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
     std::string EmployeeInformationFormationController::searchWithId(std::string data){
         EmployeeInformationFormation employee;
         nlohmann::json j;
-        std::string ret = nullptr;
+        std::string ret = "FAIL";
         try {
             // 解析 JSON 字符串
             nlohmann::json dataJSON = nlohmann::json::parse(data);
             if (dataJSON.contains("id") && dataJSON["id"].is_number_integer()) {
                 int id = dataJSON["id"].get<int>();
-                employee = dao.get()->searchWithId(id);
+                // employee = dao.get()->searchWithId(id);
+                employee = dao->searchWithId(id);
                 if(employee.getId() != -1){
                     j["id"] = employee.getId();
                     j["name"] = employee.getName();
@@ -57,8 +58,8 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                     j["state"] = employee.getState();
                     j["res_time"] = employee.getResTime();
                     j["phone"] = employee.getPhone();
+                    std::cout << employee.getResTime() << std::endl;
                     j["licence_plate"] = employee.getLicencePlate();
-
                     ret = j.dump();
                 }
             } else {
@@ -108,7 +109,7 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                 throw std::runtime_error("age字段不存在或不是整数！");
             }
 
-            if (dataJSON.contains("hir_time") && dataJSON["gehir_timender"].is_string()){
+            if (dataJSON.contains("hir_time") && dataJSON["hir_time"].is_string()){
                 employee.setHirTime(dataJSON["hir_time"].get<std::string>());
             }else {
                 throw std::runtime_error("hir_time字段不存在或不是字符串！");
@@ -132,19 +133,22 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                 throw std::runtime_error("phone字段不存在或不是字符串！");
             }
 
-            if (dataJSON.contains("licence_plate") && dataJSON["phone"].is_string()){
-                employee.setPhone(dataJSON["phone"].get<std::string>());
+            if (dataJSON.contains("licence_plate") && dataJSON["licence_plate"].is_string()){
+                employee.setLicencePlate(dataJSON["licence_plate"].get<std::string>());
             }
 
-            dao.get()->updateWithId(employee);
+            // dao.get()->updateWithId(employee);
+            dao->updateWithId(employee);
         }
         catch (const nlohmann::json::parse_error& e) {
             // 捕获并处理 JSON 解析错误
             std::cerr << "JSON parse error: " << e.what() << '\n';
+            return "FAIL";
         }
         catch(const std::exception& e)
         {
             std::cerr << "未知错误：" << e.what() << '\n';
+            return "FAIL";
         }
         
         return "SUCCESS";
@@ -175,7 +179,7 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                 throw std::runtime_error("age字段不存在或不是整数！");
             }
 
-            if (dataJSON.contains("hir_time") && dataJSON["gehir_timender"].is_string()){
+            if (dataJSON.contains("hir_time") && dataJSON["hir_time"].is_string()){
                 employee.setHirTime(dataJSON["hir_time"].get<std::string>());
             }else {
                 throw std::runtime_error("hir_time字段不存在或不是字符串！");
@@ -193,19 +197,22 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                 throw std::runtime_error("phone字段不存在或不是字符串！");
             }
 
-            if (dataJSON.contains("licence_plate") && dataJSON["phone"].is_string()){
-                employee.setPhone(dataJSON["phone"].get<std::string>());
+            if (dataJSON.contains("licence_plate") && dataJSON["licence_plate"].is_string()){
+                employee.setLicencePlate(dataJSON["licence_plate"].get<std::string>());
             }
 
-            dao.get()->addEmployeeInformationFormation(employee);
+            // dao.get()->addEmployeeInformationFormation(employee);
+            dao->addEmployeeInformationFormation(employee);
         }
         catch (const nlohmann::json::parse_error& e) {
             // 捕获并处理 JSON 解析错误
             std::cerr << "JSON parse error: " << e.what() << '\n';
+            return "FAIL";
         }
         catch(const std::exception& e)
         {
             std::cerr << "未知错误：" << e.what() << '\n';
+            return "FAIL";
         }
         
         return "SUCCESS";

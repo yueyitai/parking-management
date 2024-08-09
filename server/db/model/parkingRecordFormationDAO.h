@@ -3,6 +3,7 @@
 #include <sqlite3.h>
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 class ParkingRecordFormationDAO
 {

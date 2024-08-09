@@ -1,8 +1,8 @@
 CMakeFiles/MyProject.dir/db/model/ad_information_formationDAO.cpp.o: \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/ad_information_formationDAO.cpp \
+ /home/uther/yueqian/parking-management/server/db/model/ad_information_formationDAO.cpp \
  /usr/include/stdc-predef.h \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/ad_information_formationDAO.h \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/ad_information_formation.h \
+ /home/uther/yueqian/parking-management/server/db/model/ad_information_formationDAO.h \
+ /home/uther/yueqian/parking-management/server/db/model/ad_information_formation.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -112,7 +112,7 @@ CMakeFiles/MyProject.dir/db/model/ad_information_formationDAO.cpp.o: \
  /usr/include/c++/13/bits/functional_hash.h \
  /usr/include/c++/13/bits/hash_bytes.h \
  /usr/include/c++/13/bits/basic_string.tcc \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/sqlite3.h \
+ /home/uther/yueqian/parking-management/server/db/model/sqlite3.h \
  /usr/include/c++/13/sstream /usr/include/c++/13/istream \
  /usr/include/c++/13/ios /usr/include/c++/13/exception \
  /usr/include/c++/13/bits/exception_ptr.h \

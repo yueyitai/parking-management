@@ -1,5 +1,5 @@
 CMakeFiles/MyProject.dir/db/model/sqlite3.c.o: \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/sqlite3.c \
+ /home/uther/yueqian/parking-management/server/db/model/sqlite3.c \
  /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \

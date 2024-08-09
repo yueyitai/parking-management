@@ -51,6 +51,7 @@ void EmployeeInformationFormation::setAge(int newAge)
 
 const std::string &EmployeeInformationFormation::getHirTime() const
 {
+    return hirTime;
 }
 
 void EmployeeInformationFormation::setHirTime(const std::string &newHireTime)
@@ -70,6 +71,7 @@ void EmployeeInformationFormation::setState(bool newState)
 
 const std::string &EmployeeInformationFormation::getResTime() const
 {
+    return resTime;
 }
 
 void EmployeeInformationFormation::setResTime(const std::string &newResTime)

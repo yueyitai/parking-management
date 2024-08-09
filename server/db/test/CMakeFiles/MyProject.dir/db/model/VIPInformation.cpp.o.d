@@ -1,7 +1,7 @@
 CMakeFiles/MyProject.dir/db/model/VIPInformation.cpp.o: \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/VIPInformation.cpp \
+ /home/uther/yueqian/parking-management/server/db/model/VIPInformation.cpp \
  /usr/include/stdc-predef.h \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/VIPInformation.h \
+ /home/uther/yueqian/parking-management/server/db/model/VIPInformation.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

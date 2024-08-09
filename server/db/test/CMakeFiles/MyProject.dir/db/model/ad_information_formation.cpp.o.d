@@ -1,7 +1,7 @@
 CMakeFiles/MyProject.dir/db/model/ad_information_formation.cpp.o: \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/ad_information_formation.cpp \
+ /home/uther/yueqian/parking-management/server/db/model/ad_information_formation.cpp \
  /usr/include/stdc-predef.h \
- /mnt/e/yueqian/project/parkingManagement/parking-management/server/db/model/ad_information_formation.h \
+ /home/uther/yueqian/parking-management/server/db/model/ad_information_formation.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

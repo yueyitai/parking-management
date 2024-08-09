@@ -12,7 +12,8 @@
 class EmployeeInformationFormationController
 {
 private:
-    std::shared_ptr<EmployeeInformationFormationDAO> dao;
+    // std::shared_ptr<EmployeeInformationFormationDAO> dao;
+    EmployeeInformationFormationDAO *dao;
 public:
     EmployeeInformationFormationController(EmployeeInformationFormationDAO *dao);
 
