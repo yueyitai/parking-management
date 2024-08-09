@@ -1,9 +1,11 @@
 #include "ParkingServer.h"
 #include "base64.h"
-#include "controller/adInfomationFormationController.h"
-#include "ad_information_formationDAO.h"
-#include <memory>
+#include "adInfomationFormationController.h"
+#include "EmployeeInformationFormationController.h"
+#include "parkingRecordFormationController.h"
+#include "VIPInformationController.h"
 
+#include <memory>
 #include <thread>
 #include <nlohmann/json.hpp>
 #include <fstream>
@@ -95,7 +97,8 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_GET_ALL_INFO, request.header.opt, fd);
+
+		_createResponse(ECLIENT_GET_ALL_INFO, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -103,7 +106,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_INSERT_ONE_INFO, request.header.opt, fd);
+		_createResponse(ECLIENT_INSERT_ONE_INFO, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -111,7 +114,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_QUERY_ONE_INFO_BY_ID, request.header.opt, fd);
+		_createResponse(ECLIENT_QUERY_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -119,7 +122,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd);
+		_createResponse(ECLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -128,19 +131,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		try
-		{
-			//操作数据库
-			Ad_information_formationDAO dao;
-			AdInformationFormationController controller(&dao);
-			controller.insertAdInformationFormation(request.body.data);
-		}
-		catch (const std::exception& e)
-		{
-			log_error("ad operate database error %s", e.what());
-		}
-
-		_createResponse(ADCLIENT_INSERT_ONE_INFO, request.header.opt, fd);
+		_createResponse(ADCLIENT_INSERT_ONE_INFO, request.header.opt, fd,request.body.data);
 
 		//处理图片，将图片存到本地
 		_handleImage(request.body.data, fd);
@@ -149,13 +140,30 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 		std::string newRequestStr;
 		_changeJsonStr(requestStr, newRequestStr);
 
+		struct request newRequest;
+		_analyzeRequest(newRequestStr, newRequest);
+
+		//数据库接口
+		std::string outData;
+		try
+		{
+			Ad_information_formationDAO dao;
+			AdInformationFormationController controller(&dao);
+			outData = controller.insertAdInformationFormation(newRequest.body.data);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+
 		break;
 	}
 	case ADCLIENT_QUERY_ONE_INFO_BY_ID:
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ADCLIENT_QUERY_ONE_INFO_BY_ID, request.header.opt, fd);
+		_createResponse(ADCLIENT_QUERY_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -163,7 +171,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd);
+		_createResponse(ECLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -171,7 +179,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ADCLIENT_DELETE_ONE_INFO_BY_ID, request.header.opt, fd);
+		_createResponse(ADCLIENT_DELETE_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -179,7 +187,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ADCLIENT_GET_ALL_INFO, request.header.opt, fd);
+		_createResponse(ADCLIENT_GET_ALL_INFO, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -188,7 +196,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(PCLIENT_QUERY_ONE_INFO_BY_PLATE, request.header.opt, fd);
+		_createResponse(PCLIENT_QUERY_ONE_INFO_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -196,7 +204,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(PCLIENT_INSERT_ONE_INFO, request.header.opt, fd);
+		_createResponse(PCLIENT_INSERT_ONE_INFO, request.header.opt, fd,request.body.data);
 
 		//处理图片
 		_handleImage(request.body.data, fd);
@@ -218,13 +226,27 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 
 		log_debug("newRequest.data:%s", newRequest.body.data.c_str());
 
+		//数据库接口
+		std::string outData;
+		try
+		{
+			ParkingRecordFormationDAO dao;
+			ParkingRecordFormationController controller(&dao);
+			outData = controller.usePark(newRequest.body.data);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+
 		break;
 	}
 	case PCLIENT_DELETE_ONE_INFO_BY_PLATE:
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(PCLIENT_DELETE_ONE_INFO_BY_PLATE, request.header.opt, fd);
+		_createResponse(PCLIENT_DELETE_ONE_INFO_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -232,7 +254,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE, request.header.opt, fd);
+		_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -240,7 +262,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE, request.header.opt, fd);
+		_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -249,7 +271,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(VIPCLIENT_INSERT_ONE_INFO, request.header.opt, fd);
+		_createResponse(VIPCLIENT_INSERT_ONE_INFO, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -257,7 +279,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(VIPCLIENT_QUERY_ONE_INFO_BY_PLATE, request.header.opt, fd);
+		_createResponse(VIPCLIENT_QUERY_ONE_INFO_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -265,7 +287,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE, request.header.opt, fd);
+		_createResponse(VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -314,11 +336,13 @@ void ParkingServer::_handleImage(std::string data,int fd)
 	log_debug("imgName:%s,imgSize:%d", imgName.c_str(), imgSize);
 
 #if 1
+	std::string imgPath = "./images/" + imgName;
+
 	std::fstream file;
-	file.open(imgName, std::ios_base::out);
+	file.open(imgPath, std::ios_base::out);
 	if (!file.is_open())
 	{
-		log_error("%s open error", imgName.c_str());
+		log_error("%s open error", imgPath.c_str());
 		return;
 	}
 
@@ -366,7 +390,7 @@ void ParkingServer::_changeJsonStr(std::string& baseRequestStr, std::string& new
 		json dataObj = json::parse(dataStr);
 		std::string imgName = dataObj["image"]["name"];
 		dataObj.erase("image");
-		dataObj["image"] = imgName;
+		dataObj["image"] = "./images/" + imgName;
 
 		if (plateStr != nullptr)
 		{
@@ -385,7 +409,7 @@ void ParkingServer::_changeJsonStr(std::string& baseRequestStr, std::string& new
 	log_debug("newRequestStr:%s", newRequestStr.c_str());
 }
 
-void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int fd)
+void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int fd,std::string& inData)
 {
 	struct response response;
 
@@ -395,91 +419,349 @@ void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int 
 	case ECLIENT_GET_ALL_INFO:
 	{
 		//数据库接口
+		std::string outData;
+		try
+		{
+			EmployeeInformationFormationDAO dao;
+			EmployeeInformationFormationController controller(&dao);
+			outData = controller.getAllEmployee();
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ECLIENT_GET_ALL_INFO},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_GET_ALL_INFO},outData };
 
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_GET_ALL_INFO},"haha" };
 		break;
 	}
 	case ECLIENT_INSERT_ONE_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_INSERT_ONE_INFO},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			EmployeeInformationFormationDAO dao;
+			EmployeeInformationFormationController controller(&dao);
+			outData = controller.insert(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ECLIENT_INSERT_ONE_INFO},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_INSERT_ONE_INFO},outData };
+
 		break;
 	}
 	case ECLIENT_QUERY_ONE_INFO_BY_ID:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_QUERY_ONE_INFO_BY_ID},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			EmployeeInformationFormationDAO dao;
+			EmployeeInformationFormationController controller(&dao);
+			outData = controller.searchWithId(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ECLIENT_QUERY_ONE_INFO_BY_ID},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_QUERY_ONE_INFO_BY_ID},outData };
+
 		break;
 	}
 	case ECLIENT_UPDATE_ONE_INFO_BY_ID:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_UPDATE_ONE_INFO_BY_ID},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			EmployeeInformationFormationDAO dao;
+			EmployeeInformationFormationController controller(&dao);
+			outData = controller.updateWithId(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ECLIENT_UPDATE_ONE_INFO_BY_ID},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ECLIENT_UPDATE_ONE_INFO_BY_ID},outData };
+
 		break;
 	}
 	//广告
 	case ADCLIENT_INSERT_ONE_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_INSERT_ONE_INFO},"haha" };
+		// //数据库接口
+		// std::string outData;
+		// try
+		// {
+		// 	Ad_information_formationDAO dao;
+		// 	AdInformationFormationController controller(&dao);
+		// 	outData = controller.insertAdInformationFormation(inData);
+		// }
+		// catch(const std::exception& e)
+		// {
+		// 	log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		// }
+		
+		// if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
+		// else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
+
+		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_INSERT_ONE_INFO},"outData" };
+
 		break;
 	}
 	case ADCLIENT_QUERY_ONE_INFO_BY_ID:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			Ad_information_formationDAO dao;
+			AdInformationFormationController controller(&dao);
+			outData = controller.selectAdInformationFormationById(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
+
 		break;
 	}
 	case ADCLIENT_UPDATE_ONE_INFO_BY_ID:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_UPDATE_ONE_INFO_BY_ID},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			Ad_information_formationDAO dao;
+			AdInformationFormationController controller(&dao);
+			outData = controller.updateAdInformationFormationById(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_UPDATE_ONE_INFO_BY_ID},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_UPDATE_ONE_INFO_BY_ID},outData };
+
 		break;
 	}
 	case ADCLIENT_DELETE_ONE_INFO_BY_ID:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_DELETE_ONE_INFO_BY_ID},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			Ad_information_formationDAO dao;
+			AdInformationFormationController controller(&dao);
+			outData = controller.deleteAdInformationFormationById(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_DELETE_ONE_INFO_BY_ID},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_DELETE_ONE_INFO_BY_ID},outData };
+
 		break;
 	}
 	case ADCLIENT_GET_ALL_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_GET_ALL_INFO},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			Ad_information_formationDAO dao;
+			AdInformationFormationController controller(&dao);
+			outData = controller.getAllAdInformationFormation();
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_GET_ALL_INFO},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_GET_ALL_INFO},outData };
+
 		break;
 	}
 	//停车场
 	case PCLIENT_QUERY_ONE_INFO_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_ONE_INFO_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			ParkingRecordFormationDAO dao;
+			ParkingRecordFormationController controller(&dao);
+			outData = controller.usePark(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_QUERY_ONE_INFO_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_ONE_INFO_BY_PLATE},outData };
+
 		break;
 	}
 	case PCLIENT_INSERT_ONE_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},"haha" };
+		// //数据库接口
+		// std::string outData;
+		// try
+		// {
+		// 	ParkingRecordFormationDAO dao;
+		// 	ParkingRecordFormationController controller(&dao);
+		// 	outData = controller.usePark(inData);
+		// }
+		// catch(const std::exception& e)
+		// {
+		// 	log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		// }
+		
+		// if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_INSERT_ONE_INFO},outData };
+		// else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},outData };
+
+		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},"outData" };
+
 		break;
 	}
 	case PCLIENT_DELETE_ONE_INFO_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_DELETE_ONE_INFO_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			ParkingRecordFormationDAO dao;
+			ParkingRecordFormationController controller(&dao);
+			outData = controller.usePark(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_DELETE_ONE_INFO_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_DELETE_ONE_INFO_BY_PLATE},outData };
+
 		break;
 	}
 	case PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			ParkingRecordFormationDAO dao;
+			ParkingRecordFormationController controller(&dao);
+			outData = controller.usePark(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE},outData };
+
 		break;
 	}
 	case PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			ParkingRecordFormationDAO dao;
+			ParkingRecordFormationController controller(&dao);
+			outData = controller.usePark(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE},outData };
+
 		break;
 	}
 	//VIP
 	case VIPCLIENT_INSERT_ONE_INFO:
 	{
+		//数据库接口
+		std::string outData;
+		try
+		{
+			VIPInformationDAO dao;
+			VIPInformationController controller(&dao);
+			outData = controller.VIPRegister(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,VIPCLIENT_INSERT_ONE_INFO},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_INSERT_ONE_INFO},outData };
+
 		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_INSERT_ONE_INFO},"haha" };
 		break;
 	}
 	case VIPCLIENT_QUERY_ONE_INFO_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_QUERY_ONE_INFO_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			VIPInformationDAO dao;
+			VIPInformationController controller(&dao);
+			outData = controller.VIPLogin(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,VIPCLIENT_QUERY_ONE_INFO_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_QUERY_ONE_INFO_BY_PLATE},outData };
+
 		break;
 	}
 	case VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE},"haha" };
+		//数据库接口
+		std::string outData;
+		try
+		{
+			VIPInformationDAO dao;
+			VIPInformationController controller(&dao);
+			outData = controller.VIPCharge(inData);
+		}
+		catch(const std::exception& e)
+		{
+			log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
+		}
+		
+		if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE},outData };
+		else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,VIPCLIENT_UPDATE_ONE_INFO_BY_PLATE},outData };
+
 		break;
 	}
 	default:

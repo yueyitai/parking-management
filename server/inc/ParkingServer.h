@@ -1,6 +1,5 @@
 #pragma once
 #include "ClientManager.h"
-#include <cppcodec/base64_rfc4648.hpp>
 
 class ParkingServer :
     public ClientManager
@@ -81,7 +80,7 @@ private:
 	void _analyzeRequest(std::string& requestStr, struct request& request);
 	void _handleImage(std::string data,int fd);
 	void _changeJsonStr(std::string& baseRequestStr, std::string& newRequestStr, std::string* plateStr = nullptr);
-	void _createResponse(enum optCode optCode, std::string& opt, int fd);
+	void _createResponse(enum optCode optCode, std::string& opt, int fd,std::string& inData);
 	void _formatResponse(std::string& responseStr, struct response& response);
 	void _sendResponse(std::string& responseStr, int fd);
 	bool _recognizePlate(std::string& data, std::string& plateJsonStr);
