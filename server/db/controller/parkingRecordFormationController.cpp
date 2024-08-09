@@ -53,11 +53,8 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 EmployeeInformationFormationDAO employeeDAO;
                 VIPInformationDAO vipDAO;
                 std::string licencePlate = record.getLicencePlate();
-                std::cout << "test5" << std::endl;
                 EmployeeInformationFormation employee = employeeDAO.searchWithLicence(licencePlate);
-                std::cout << "test6" << std::endl;
                 VIPInformation vip = vipDAO.searchwithLicence(licencePlate);
-                std::cout << "test7" << std::endl;
                 if(employee.getId() == -1 && vip.getId() == -1){//需要收钱
                     j["time"] = record.getEnterParkingTime();
                     j["flag"] = 0;
@@ -68,7 +65,6 @@ ParkingRecordFormationController::~ParkingRecordFormationController()
                 record.setIsDelete(0);
                 record.setOutParkingTime(time);
                 record.setOutPicPath(path);
-            std::cout << "test" << std::endl;
 
                 dao->updateParkingRecordFormation(record);
             }

@@ -12,9 +12,9 @@ int main(){
         = make_shared<ParkingRecordFormationController>(&dao);
 
     string test = R"({
-        "path": "/server/pic/2.jpg",
-        "time": 1723187778,
-        "licence_plate": "赣A8373E"
+        "path": "/server/pic/4.jpg",
+        "time": 1723187878,
+        "licence_plate": "赣B98398"
     })";
 
     string ret = controllerPtr.get()->usePark(test);    
