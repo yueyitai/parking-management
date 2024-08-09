@@ -1,10 +1,10 @@
 #include "ad_information_formationDAO.h"
-
-inline bool openDb(sqlite3 *db)
+#include <iostream>
+inline bool openDb(sqlite3 **db)
 {
 
     // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    if (sqlite3_open("parkingManagementDb.db", db) != SQLITE_OK)
     {
         return false;
     }
@@ -17,23 +17,23 @@ inline bool openDb(sqlite3 *db)
         sqlite3 *db;  
         sqlite3_stmt* stmt;  
         std::vector<Ad_information_formation> adVec;  
-        char *errorMessage = nullptr;  
+        const char *errorMessage = nullptr;  
     
         // 打开数据库  
-        if (!openDb(db)) {  
+        if (!openDb(&db)) {  
             throw std::runtime_error("打开数据库失败");  
         }  
     
         // 准备SQL语句  
-        std::string sql = "SELECT * FROM ad_information_form";  
+        std::string sql = "SELECT * FROM ad_information_table";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,nullptr) != SQLITE_OK) {  
             // 如果编译失败，关闭数据库并抛出异常  
             sqlite3_close(db);  
             if (errorMessage) {  
                 std::string errorMsg(errorMessage);  
-                sqlite3_free(errorMessage);  
+                //sqlite3_free(errorMessage);  
                 throw std::runtime_error(errorMsg);  
             }  
             throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
@@ -55,12 +55,12 @@ inline bool openDb(sqlite3 *db)
         }  
     
         // 检查是否有错误发生 
-        if (sqlite3_errcode(db) != SQLITE_OK) {  
-            std::string errorMsg(sqlite3_errmsg(db));  
-            sqlite3_finalize(stmt);  
-            sqlite3_close(db);  
-            throw std::runtime_error(errorMsg);  
-        }  
+        // if (sqlite3_errcode(db) != SQLITE_OK) {  
+        //     std::string errorMsg(sqlite3_errmsg(db));  
+        //     sqlite3_finalize(stmt);  
+        //     sqlite3_close(db);  
+        //     throw std::runtime_error(errorMsg);  
+        // }  
     
         // 清理资源  
         sqlite3_finalize(stmt);  
@@ -73,34 +73,47 @@ inline bool openDb(sqlite3 *db)
     bool Ad_information_formationDAO::addAd_information_formation(Ad_information_formation ad){
         sqlite3 *db;  
         sqlite3_stmt* stmt;  
-        char *errorMessage = nullptr;  
+        const char *errorMessage = nullptr;  
     
         // 打开数据库  
-        if (!openDb(db)) {  
+        if (!openDb(&db)) {  
             throw std::runtime_error("打开数据库失败");  
         }  
     
         // 准备SQL语句  
-        std::string sql = "INSERT INTO ad_information_form (name, start_time, expirat_date, content, phone) VALUES (?, ?, ?, ?, ?)";  
+        std::string sql = "INSERT INTO ad_information_table (name, start_date, expirat_date, content, phone) VALUES (?, ?, ?, ?, ?)";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
-            // 如果编译失败，关闭数据库并抛出异常  
-            sqlite3_close(db);  
-            if (errorMessage) {  
-                std::string errorMsg(errorMessage);  
-                sqlite3_free(errorMessage);  
-                throw std::runtime_error(errorMsg);  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {  
+                // 获取错误消息
+                errorMessage = sqlite3_errmsg(db);
+                sqlite3_close(db);  
+                if (errorMessage) {
+                    std::string errorMsg(errorMessage);
+                    // sqlite3_free((void *)errorMessage); 
+                    throw std::runtime_error("SQLite准备语句失败: " + errorMsg);
+                } else {
+                    throw std::runtime_error("SQLite准备语句失败，但无具体错误信息"); 
+                }
             }  
-            throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
-        }  
     
+        std::string name = ad.getName();
+        std::cout << name<< std::endl;
+        std::string starttime = ad.getStartTime();
+        std::cout << starttime<< std::endl;
+        std::string expiratdate = ad.getExpiratDate();
+        std::cout << expiratdate<< std::endl;
+        std::string content = ad.getContent();
+        std::cout << content<< std::endl;
+        std::string phone = ad.getPhone();
+        std::cout << phone<< std::endl;
+
         // 绑定参数  
-        sqlite3_bind_text(stmt, 1, ad.getName().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 2, ad.getStartTime().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 3, ad.getExpiratDate().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 4, ad.getContent().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 5, ad.getPhone().c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 2, starttime.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 3, expiratdate.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 4, content.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 5, phone.c_str(), -1, SQLITE_STATIC);
     
         // 执行SQL语句  
         if (sqlite3_step(stmt) != SQLITE_DONE) {  
@@ -123,23 +136,23 @@ inline bool openDb(sqlite3 *db)
     bool Ad_information_formationDAO::deleteaddAd_information_formation(int id){
         sqlite3 *db;  
         sqlite3_stmt* stmt;  
-        char *errorMessage = nullptr;  
+        const char *errorMessage = nullptr;  
     
         // 打开数据库  
-        if (!openDb(db)) {  
+        if (!openDb(&db)) {  
             throw std::runtime_error("打开数据库失败");  
         }  
     
         // 准备SQL语句  
-        std::string sql = "DELETE FROM ad_information_form WHERE id=?";  
+        std::string sql = "DELETE FROM ad_information_table WHERE id=?";  
     
         // 编译SQL语句  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,nullptr) != SQLITE_OK) {  
             // 如果编译失败，关闭数据库并抛出异常  
             sqlite3_close(db);  
             if (errorMessage) {  
                 std::string errorMsg(errorMessage);  
-                sqlite3_free(errorMessage);  
+                //sqlite3_free(errorMessage);  
                 throw std::runtime_error(errorMsg);  
             }  
             throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
@@ -170,31 +183,44 @@ inline bool openDb(sqlite3 *db)
     bool Ad_information_formationDAO::updateaddAd_information_formation(Ad_information_formation ad){
         sqlite3 *db;  
         sqlite3_stmt* stmt;  
-        char *errorMessage = nullptr;  
+        const char *errorMessage = nullptr;  
 
-        if (!openDb(db)) {  
+        if (!openDb(&db)) {  
             throw std::runtime_error("打开数据库失败");  
         }  
 
         // 准备SQL语句  
-        std::string sql = "UPDATE ad_information_form SET name=?, start_time=?, expirat_date=?, content=?, phone=? WHERE id=?";  
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK) {  
+        std::string sql = "UPDATE ad_information_table SET name=?, start_date=?, expirat_date=?, content=?, phone=? WHERE id=?";  
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,nullptr) != SQLITE_OK) {  
             sqlite3_close(db);  
             if (errorMessage) {  
                 std::string errorMsg(errorMessage);  
-                sqlite3_free(errorMessage);  
+                //sqlite3_free(errorMessage);  
                 throw std::runtime_error(errorMsg);  
             }  
             throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
         }  
 
         // 绑定参数  
-        sqlite3_bind_text(stmt, 1, ad.getName().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 2, ad.getStartTime().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 3, ad.getExpiratDate().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 4, ad.getContent().c_str(), -1, SQLITE_STATIC);  
-        sqlite3_bind_text(stmt, 5, ad.getPhone().c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_int(stmt, 6, ad.getId());  
+        std::string name = ad.getName();
+        std::cout << name<< std::endl;
+        std::string starttime = ad.getStartTime();
+        std::cout << starttime<< std::endl;
+        std::string expiratdate = ad.getExpiratDate();
+        std::cout << expiratdate<< std::endl;
+        std::string content = ad.getContent();
+        std::cout << content<< std::endl;
+        std::string phone = ad.getPhone();
+        std::cout << phone<< std::endl;
+        int id = ad.getId();
+        std::cout << id<< std::endl;
+
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 2, starttime.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 3, expiratdate.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 4, content.c_str(), -1, SQLITE_STATIC);  
+        sqlite3_bind_text(stmt, 5, phone.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 6, id);  
 
         // 执行SQL语句  
         if (sqlite3_step(stmt) != SQLITE_DONE) {  
@@ -218,40 +244,39 @@ Ad_information_formation Ad_information_formationDAO::getAd_information_formatio
 
     // 打开数据库连接
     sqlite3 *db;
-    if (!openDb(db))
+    if (!openDb(&db))
     {
         throw std::runtime_error("Failed to open database");
     }
-
     // 准备SQL语句
-    std::string sql = "SELECT * FROM ad_information_formation WHERE id = ?";
+    std::string sql = "SELECT * FROM ad_information_table WHERE id = ?";
     sqlite3_stmt *stmt;
     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
         throw std::runtime_error("Failed to prepare statement");
     }
-
     // 绑定参数
     if (sqlite3_bind_int(stmt, 1, id) != SQLITE_OK)
     {
         throw std::runtime_error("Failed to bind parameter");
 
     }
+
+    Ad_information_formation ad_information_formation;
     // 执行查询
     if (sqlite3_step(stmt) != SQLITE_ROW)
     {
-        throw std::runtime_error("Failed to execute query");
+        //throw std::runtime_error("Failed to execute query");
+        return ad_information_formation;
     }
-
     // 提取结果
-    Ad_information_formation ad_information_formation;
+    
     ad_information_formation.setId(sqlite3_column_int(stmt, 0));
     ad_information_formation.setName(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1)));
     ad_information_formation.setStartTime(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2)));
     ad_information_formation.setExpiratDate(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));
     ad_information_formation.setContent(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4)));
     ad_information_formation.setPhone(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5)));
-    
     // 清理资源
     sqlite3_finalize(stmt);
     sqlite3_close(db);

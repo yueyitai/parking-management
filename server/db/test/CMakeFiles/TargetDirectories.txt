@@ -1,3 +1,0 @@
-/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/test/CMakeFiles/MyProject.dir
-/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/test/CMakeFiles/edit_cache.dir
-/mnt/e/yueqian/project/parkingManagement/parking-management/server/db/test/CMakeFiles/rebuild_cache.dir
