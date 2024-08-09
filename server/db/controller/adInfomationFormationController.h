@@ -12,7 +12,7 @@
 class AdInformationFormationController
 {
 private:
-    std::shared_ptr<Ad_information_formationDAO> dao;
+    Ad_information_formationDAO* dao;
 public:
     typedef std::shared_ptr<AdInformationFormationController> ptr;
     AdInformationFormationController(Ad_information_formationDAO* dao);

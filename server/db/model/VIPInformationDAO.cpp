@@ -1,10 +1,10 @@
 #include <VIPInformationDAO.h>
-
-inline bool openDb(sqlite3 *db)
+#include <iostream>
+inline bool openDb(sqlite3 **db)
 {
 
     // 打开数据库连接
-    if (sqlite3_open("parkingManagementDb.db", &db) != SQLITE_OK)
+    if (sqlite3_open("parkingManagementDb.db", db) != SQLITE_OK)
     {
         return false;
     }
@@ -26,9 +26,9 @@ VIPInformation VIPInformationDAO::searchwithLicence(const std::string licence_pl
     sqlite3 *db;  
     sqlite3_stmt *statement;  
     VIPInformation vip;  
-    char *errorMessage = nullptr;  
+    const char *errorMessage = nullptr;  
   
-    if (!openDb(db))  
+    if (!openDb(&db))  
     {  
         throw std::runtime_error("打开数据库失败");  
     }  
@@ -36,18 +36,31 @@ VIPInformation VIPInformationDAO::searchwithLicence(const std::string licence_pl
     std::string sql = "SELECT * FROM VIP_information_table WHERE licence_plate=?";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
-    {  
-        // 错误处理：无法准备SQL语句  
-        sqlite3_close(db);  
-        if (errorMessage)  
-        {  
-            std::string errorMsg(errorMessage);  
-            sqlite3_free(errorMessage);  
-            throw std::runtime_error(errorMsg);  
-        }  
-        throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
-    }  
+    // if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,nullptr) != SQLITE_OK)  
+    // {  
+    //     // 错误处理：无法准备SQL语句  
+    //     sqlite3_close(db);  
+    //     if (errorMessage)  
+    //     {  
+    //         std::string errorMsg(errorMessage);  
+    //         //sqlite3_free(errorMessage);  
+    //         throw std::runtime_error(errorMsg);  
+    //     }  
+    //     throw std::runtime_error("查询SQLite准备语句失败，但无具体错误信息");  
+    // }  
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, nullptr) != SQLITE_OK) {   
+            // 获取错误消息
+             errorMessage = sqlite3_errmsg(db);
+            sqlite3_close(db);   
+            if (errorMessage) {
+                  std::string errorMsg(errorMessage);
+                  // sqlite3_free((void *)errorMessage); 
+                  throw std::runtime_error("SQLite准备语句失败: " + errorMsg);
+            } else {
+                  throw std::runtime_error("SQLite准备语句失败，但无具体错误信息"); 
+            }
+      }   
   
     // 绑定参数  
     sqlite3_bind_text(statement, 1, licence_plate.c_str(), -1, SQLITE_STATIC);  
@@ -75,37 +88,43 @@ VIPInformation VIPInformationDAO::searchwithLicence(const std::string licence_pl
 //更新数据
 bool VIPInformationDAO::updateVIPInformation(const VIPInformation vip){
     sqlite3 *db;  
-    char *errorMessage = nullptr;  
+    const char *errorMessage = nullptr;  
     sqlite3_stmt* stmt;  
-    if (!openDb(db))  
+    if (!openDb(&db))  
     {  
         throw std::runtime_error("打开数据库失败");  
         return false;  
     }  
   
-    std::string sql = "UPDATE parking_record_form SET licence_plate=?, start_time=?, end_time=?, owner_name=?, owner_telephone=? WHERE id=?";  
+    std::string sql = "UPDATE VIP_information_table SET  start_time=?, end_time=?, owner_name=?, owner_telephone=? WHERE id=?";  
   
     // 准备SQL语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,(const char **) &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,nullptr) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
         {  
             std::string errorMsg(errorMessage);  
-            sqlite3_free(errorMessage);  
+            //sqlite3_free(errorMessage);  
             throw std::runtime_error(errorMsg);  
         }  
         throw std::runtime_error("SQLite准备语句失败，但无具体错误信息");  
         return false;  
     }  
-  
+    
+    int id = vip.getId();
+    std::string starttime = vip.getStartTime();
+    std::string endtime = vip.getEndTime();
+    std::string ownername = vip.getOwnerName();
+    std::string ownertelephone = vip.getOwnerTelephone();
+
     // 绑定数据  
-    sqlite3_bind_text(stmt, 1, vip.getLicencePlate().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 2, vip.getStartTime().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 3, vip.getEndTime().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 4, vip.getOwnerName().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 5, vip.getOwnerTelephone().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_int(stmt, 6, vip.getId());
+    //sqlite3_bind_text(stmt, 1, vip.getLicencePlate().c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_text(stmt, 1, starttime.c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_text(stmt, 2, endtime.c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_text(stmt, 3, ownername.c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_text(stmt, 4, ownertelephone.c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_int(stmt, 5, id);
   
     // 执行更新  
     if (sqlite3_step(stmt) != SQLITE_DONE)  
@@ -128,37 +147,46 @@ bool VIPInformationDAO::updateVIPInformation(const VIPInformation vip){
 bool VIPInformationDAO::addVIPInformation(const VIPInformation vip){
     sqlite3 *db;  
     sqlite3_stmt *statement;  
-    char *errorMessage = nullptr;  
-  
-    if (!openDb(db))  
+    const char *errorMessage = nullptr;  
+    
+    if (!openDb(&db))  
     {  
         throw std::runtime_error("打开数据库失败");  
         return false;  
     }  
   
     // 准备SQL语句  
-    std::string sql = "INSERT INTO parking_record_form (licence_plate, start_time, end_time, owner_name, owner_telephone) VALUES (?, ?, ?, ?, ?)";  
+    std::string sql = "INSERT INTO VIP_information_table (licence_plate, start_time, end_time, owner_name, owner_telephone) VALUES (?, ?, ?, ?, ?)";  
   
     // 准备语句  
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,(const char **) &errorMessage) != SQLITE_OK)  
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &statement,nullptr) != SQLITE_OK)  
     {  
         sqlite3_close(db);  
         if (errorMessage)  
         {  
             std::string errorMsg(errorMessage);  
-            sqlite3_free(errorMessage);  
+            //sqlite3_free(errorMessage);  
             throw std::runtime_error(errorMsg);  
         }  
         throw std::runtime_error("SQL准备语句失败");  
     }  
-  
+
+    std::string licenceplate = vip.getLicencePlate();
+    std::string starttime = vip.getStartTime();
+    std::string endtime = vip.getEndTime();
+    std::string ownername = vip.getOwnerName();
+    std::string ownertelephone = vip.getOwnerTelephone();
     // 绑定参数  
-    sqlite3_bind_text(statement, 1, vip.getLicencePlate().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(statement, 2, vip.getStartTime().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(statement, 3, vip.getEndTime().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(statement, 4, vip.getOwnerName().c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(statement, 5, vip.getOwnerTelephone().c_str(), -1, SQLITE_STATIC);  
-  
+    sqlite3_bind_text(statement, 1, licenceplate.c_str(), -1, SQLITE_STATIC);  
+    std::cout << vip.getLicencePlate().c_str() << std::endl;
+    sqlite3_bind_text(statement, 2, starttime.c_str(), -1, SQLITE_STATIC);  
+    std::cout << vip.getStartTime().c_str() << std::endl;
+    sqlite3_bind_text(statement, 3,endtime.c_str(), -1, SQLITE_STATIC);  
+    std::cout << vip.getEndTime().c_str() << std::endl;
+    sqlite3_bind_text(statement, 4, ownername.c_str(), -1, SQLITE_STATIC);  
+    std::cout << vip.getOwnerName().c_str()<< std::endl;
+    sqlite3_bind_text(statement, 5,ownertelephone.c_str(), -1, SQLITE_STATIC);  
+    std::cout << vip.getOwnerTelephone().c_str()<< std::endl;
     // 执行SQL语句  
     if (sqlite3_step(statement) != SQLITE_DONE)  
     {  
@@ -167,7 +195,7 @@ bool VIPInformationDAO::addVIPInformation(const VIPInformation vip){
         if (errorMessage)  
         {  
             std::string errorMsg(errorMessage);  
-            sqlite3_free(errorMessage);  
+            //sqlite3_free(errorMessage);  
             throw std::runtime_error(errorMsg);  
         }  
         throw std::runtime_error("SQL执行失败");  

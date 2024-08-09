@@ -12,7 +12,7 @@
 class VIPInformationController
 {
 private:
-    std::shared_ptr<VIPInformationDAO> dao;
+    VIPInformationDAO* dao;
     //VIPInformationDAO* dao;
 public:
     typedef std::shared_ptr<VIPInformationController> ptr;
