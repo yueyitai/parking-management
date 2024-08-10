@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/vip">
+        <file>load_QR_code.png</file>
+        <file>starry_sky_background.png</file>
+        <file>money_receving_QR_code.jpg</file>
+        <file>vip_background.png</file>
+    </qresource>
+</RCC>

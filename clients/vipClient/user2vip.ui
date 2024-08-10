@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>User2vip</class>
+ <widget class="QWidget" name="User2vip">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+
+QWidget#widget {  
+    background-image: url(:/vip/vip_background.png);  
+}</string>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>481</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#label_4{
+    font-size: 20px; /* 设置字体大小 */  
+    font-weight: bold; /* 设置字体加粗 */  
+    text-align: center; /* 设置文本居中 */  
+}
+
+QLabel{
+	color: white;
+	background-color: rgba(33,33,0,0);
+}
+
+QLineEdit{
+	border: 2px solid #a3a3a3;
+	font: 18pt;
+	border-radius:8px;
+	background-color: white;
+}
+
+QLineEdit::focus{
+	border-color:#488ee7
+}
+
+QLineEdit:hover{
+	border: 2px solid #4e6ef2;
+	font:18pt;
+	border-radius:8px;
+}
+
+QComboBox{
+	background-color: white
+}
+
+#login_button, #register_button{
+font-size: 14px;
+background-color: #e5004f;
+display: inline-block;
+color: #fff;
+text-align: center;
+cursor: pointer;
+float: right;
+}
+
+#keyboard_button{
+font-size: 14px;
+background-color: #00aa00;
+display: inline-block;
+color: #fff;
+text-align: center;
+cursor: pointer;
+float: right;
+}</string>
+   </property>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>90</y>
+      <width>331</width>
+      <height>134</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>车牌号码：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="province_comboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>赣</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>粤</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>京</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>津</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>沪</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>渝</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>桂</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>蒙</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>新</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>宁</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>藏</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>冀</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>豫</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>云</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>辽</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>黑</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>湘</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>皖</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>鲁</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>苏</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>浙</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>鄂</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>甘</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>晋</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>陕</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>吉</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>闽</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>桂</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>青</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>川</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>琼</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="licence_plate_number_lineEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>车主姓名：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="owner_name_lineEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>车主电话：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="owner_telephonr_lineEdit"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>40</y>
+      <width>281</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>欢迎用户注册登录</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>230</y>
+      <width>331</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="login_button">
+       <property name="text">
+        <string>登录</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="keyboard_button">
+       <property name="text">
+        <string>键盘</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="register_button">
+       <property name="text">
+        <string>注册</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
