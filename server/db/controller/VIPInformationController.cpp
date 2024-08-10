@@ -83,13 +83,13 @@ std::string VIPInformationController::VIPCharge(std::string data){
             return "FAIL";
         }else{
             std::string endTime = jsonData.at("end_time").get<std::string>();
-            std::string ownerName = jsonData.at("owner_name").get<std::string>();
-            std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
+            //std::string ownerName = jsonData.at("owner_name").get<std::string>();
+            //std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
             vip.setLicencePlate(licencePlate);
             vip.setStartTime(startTime);
             vip.setEndTime(endTime);
-            vip.setOwnerName(ownerName);
-            vip.setOwnerTelephone(ownerTelephone);
+            //vip.setOwnerName(ownerName);
+            //vip.setOwnerTelephone(ownerTelephone);
             dao->updateVIPInformation(vip);
             return "SUCCESS";
         }

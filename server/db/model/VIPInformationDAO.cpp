@@ -96,7 +96,7 @@ bool VIPInformationDAO::updateVIPInformation(const VIPInformation vip){
         return false;  
     }  
   
-    std::string sql = "UPDATE VIP_information_table SET  start_time=?, end_time=?, owner_name=?, owner_telephone=? WHERE id=?";  
+    std::string sql = "UPDATE VIP_information_table SET  start_time=?, end_time=? WHERE id=?";  
   
     // 准备SQL语句  
     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt,nullptr) != SQLITE_OK)  
@@ -115,16 +115,16 @@ bool VIPInformationDAO::updateVIPInformation(const VIPInformation vip){
     int id = vip.getId();
     std::string starttime = vip.getStartTime();
     std::string endtime = vip.getEndTime();
-    std::string ownername = vip.getOwnerName();
-    std::string ownertelephone = vip.getOwnerTelephone();
+    //std::string ownername = vip.getOwnerName();
+    //std::string ownertelephone = vip.getOwnerTelephone();
 
     // 绑定数据  
     //sqlite3_bind_text(stmt, 1, vip.getLicencePlate().c_str(), -1, SQLITE_STATIC);  
     sqlite3_bind_text(stmt, 1, starttime.c_str(), -1, SQLITE_STATIC);  
     sqlite3_bind_text(stmt, 2, endtime.c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 3, ownername.c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 4, ownertelephone.c_str(), -1, SQLITE_STATIC);  
-    sqlite3_bind_int(stmt, 5, id);
+    //sqlite3_bind_text(stmt, 3, ownername.c_str(), -1, SQLITE_STATIC);  
+    //sqlite3_bind_text(stmt, 4, ownertelephone.c_str(), -1, SQLITE_STATIC);  
+    sqlite3_bind_int(stmt, 3, id);
   
     // 执行更新  
     if (sqlite3_step(stmt) != SQLITE_DONE)  
