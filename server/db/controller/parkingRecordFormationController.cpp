@@ -104,9 +104,7 @@ std::string ParkingRecordFormationController::searchWithPlate(std::string data){
                 j["flag"] = 1;
             }
             record.setIsDelete(0);
-            if(dao->updateParkingRecordFormation(record)){
-                return "SUCCESS";
-            }else{
+            if(!dao->updateParkingRecordFormation(record)){
                 return "FAIL";
             }
         }
