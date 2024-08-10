@@ -100,13 +100,28 @@ void ClientManager::_run()
 				else
 				{
 					int clientFD = epoll.getEventSet()[i].data.fd;
-
+					
 					if (!_handleData(clientFD))
 					{
 						log_error("%s error", __FUNCTION__);
 						return ;
 					}
 				}
+			}
+			else
+			{
+				log_info("client error: [%s:%hu]", &clients[epoll.getEventSet()[i].data.fd].ip[0], clients[epoll.getEventSet()[i].data.fd].port);
+		
+				clients.erase(clients.find(epoll.getEventSet()[i].data.fd));
+				log_debug("clients size: %d", clients.size());
+
+				if (!epoll.delEvent(epoll.getEventSet()[i].data.fd))
+				{
+					log_error("%s error", __FUNCTION__);
+				}
+
+				close(epoll.getEventSet()[i].data.fd);
+				clientCount--;
 			}
 		}
 	}

@@ -96,7 +96,7 @@ std::string ParkingRecordFormationController::searchWithPlate(std::string data){
             VIPInformationDAO vipDAO;
             EmployeeInformationFormation employee = employeeDAO.searchWithLicence(licencePlate);
             VIPInformation vip = vipDAO.searchwithLicence(licencePlate);
-            if((employee.getId() == -1 && vip.getId() == -1 && employee.getState()) || employee.getState() == 0){//需要收钱
+            if(employee.getId() == -1 && vip.getId() == -1){//需要收钱
                 j["time"] = record.getEnterParkingTime();
                 j["flag"] = 0;
             }else{//不需要收钱

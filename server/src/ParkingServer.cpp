@@ -845,7 +845,7 @@ void ParkingServer::_formatResponse(std::string& responseStr, struct response& r
 		log_error("json generate error %s", e.what());
 	}
 
-	log_debug("response:%s", responseStr.c_str());
+	//log_debug("response:%s", responseStr.c_str());
 }
 
 //发送响应
@@ -858,7 +858,30 @@ void ParkingServer::_sendResponse(std::string& responseStr, int fd)
 
 	ret = send(fd, responseStr.c_str(), responseSize, 0);
 	log_debug("ret:%d", ret);
+
 }
+
+// void ParkingServer::_sendResponse(std::string& responseStr, int fd)
+//  { 
+// 	size_t responseSize = responseStr.length();
+// 	// 发送响应数据长度
+// 	ssize_t ret = send(fd, &responseSize, sizeof(responseSize), 0);
+// 	log_info("ret = %zd", ret);
+// 	if (ret != sizeof(responseSize))
+// 	{ 
+// 		log_debug("Error sending response size: ret = %zd", ret);
+// 		return;
+// 	}
+// 	// 发送响应数据
+// 	ret = send(fd, responseStr.c_str(), responseSize, 0);
+// 	log_info("ret = %zd", ret);
+// 	if (ret != responseSize) 
+// 	{ 
+// 		log_debug("Error sending response data: ret = %zd", ret);
+// 	}
+
+// 	sleep(1);
+// }
 
 //识别车牌
 bool ParkingServer::_recognizePlate(std::string& data,std::string& plateStr)
@@ -977,6 +1000,8 @@ bool ParkingServer::_sendPlate(int fd, std::string& plateStr)
 		return false;
 	}
 
+	//usleep(250000);
+
 	ret = send(fd, plateStr.c_str(), strlen, 0);
 	log_debug("ret:%d", ret);
 	if (ret < 0)
@@ -984,6 +1009,8 @@ bool ParkingServer::_sendPlate(int fd, std::string& plateStr)
 		log_error("send plateStr len error");
 		return false;
 	}
+	
+	//usleep(1000);
 
 	log_info("send plate success");
 	return true;
