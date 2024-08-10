@@ -52,8 +52,10 @@ std::string VIPInformationController::VIPRegister(std::string data){
         }else{  //没查到
             std::string ownerName = jsonData.at("owner_name").get<std::string>();
             std::string ownerTelephone = jsonData.at("owner_telephone").get<std::string>();
-            std::string start_time = jsonData.at("start_time").get<std::string>();
-            std::string end_time = jsonData.at("end_time").get<std::string>();
+            //std::string start_time = jsonData.at("start_time").get<std::string>();
+            //std::string end_time = jsonData.at("end_time").get<std::string>();
+            std::string start_time = "0000-00-00";
+            std::string end_time = "0000-00-00";
             vip.setOwnerName(ownerName);
             vip.setOwnerTelephone(ownerTelephone);
             vip.setStartTime(start_time);
