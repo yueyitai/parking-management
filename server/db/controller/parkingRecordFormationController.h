@@ -22,6 +22,8 @@ public:
     //使用停车场
     std::string usePark(std::string);
 
+    //根据车牌查询
+    std::string searchWithPlate(std::string std);
 };
 
 
