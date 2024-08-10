@@ -1,0 +1,3 @@
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/build/CMakeFiles/rebuild_cache.dir
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/build/CMakeFiles/edit_cache.dir
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/build/CMakeFiles/MyProject.dir
