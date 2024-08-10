@@ -2,7 +2,7 @@
 
 int main()
 {
-    //log_set_level(LOG_INFO);
+    log_set_level(LOG_INFO);
 
     ParkingServer ps(20202);
 
