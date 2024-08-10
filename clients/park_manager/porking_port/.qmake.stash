@@ -1,0 +1,14 @@
+QMAKE_DEFAULT_INCDIRS = \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/include/c++/5.4.0 \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/include/c++/5.4.0/arm-none-linux-gnueabi \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/include/c++/5.4.0/backward \
+    /home/hdj/usr/local/arm/5.4.0/usr/lib/gcc/arm-none-linux-gnueabi/5.4.0/include \
+    /home/hdj/usr/local/arm/5.4.0/usr/lib/gcc/arm-none-linux-gnueabi/5.4.0/include-fixed \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/include \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/sysroot/usr/include
+QMAKE_DEFAULT_LIBDIRS = \
+    /home/hdj/usr/local/arm/5.4.0/usr/lib/gcc/arm-none-linux-gnueabi/5.4.0 \
+    /home/hdj/usr/local/arm/5.4.0/usr/lib/gcc \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/lib \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/sysroot/lib \
+    /home/hdj/usr/local/arm/5.4.0/usr/arm-none-linux-gnueabi/sysroot/usr/lib

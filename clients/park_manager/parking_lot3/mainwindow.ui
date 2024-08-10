@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QLabel#vedio_Lb
+{
+	background-color:#0000F0;
+}
+QLabel#picture_Lb
+{
+	background-color:#F0F000;
+}
+QLabel#date_Lb
+{
+	background-color:#FFFF00;
+}
+QLabel#time_Lb
+{
+	background-color:#FFFF00;
+}
+QLabel#car_num_Lb
+{
+	background-color:#FF9FF0;
+}
+QLabel#fee_Lb
+{
+	background-color:#1F9FF0;
+}
+QLabel#show_Lb
+{
+	background-color:#1F9990;
+
+	color:rgba(200,100,100,0.5);
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="vedio_Lb">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-10</y>
+      <width>640</width>
+      <height>480</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>0</y>
+      <width>171</width>
+      <height>441</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="date_Lb">
+       <property name="text">
+        <string>0000-00-00</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="time_Lb">
+       <property name="text">
+        <string>00:00:00</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="vedio_Bt">
+       <property name="text">
+        <string>开启摄像头</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="picture_Bt">
+       <property name="text">
+        <string>拍照</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="picture_Lb">
+       <property name="text">
+        <string>照片</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="car_num_Lb">
+       <property name="text">
+        <string>车牌号</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="fee_Lb">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>6</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>每半个小时收费钱数(半小时内不收费）</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="fee_Ed"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="change_Bt">
+       <property name="text">
+        <string>更改钱数</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
