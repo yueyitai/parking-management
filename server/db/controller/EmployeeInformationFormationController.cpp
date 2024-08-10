@@ -20,11 +20,11 @@ EmployeeInformationFormationController::EmployeeInformationFormationController(E
                     {"name", employee.getName()},
                     {"gender", employee.getGender()},
                     {"age", employee.getAge()},
-                    {"hirTime", employee.getHirTime()},
+                    {"hir_time", employee.getHirTime()},
                     {"state", employee.getState()},
-                    {"resTime", employee.getResTime()},
+                    {"res_time", employee.getResTime()},
                     {"phone", employee.getPhone()},
-                    {"licencePlate", employee.getLicencePlate()}
+                    {"licence_plate", employee.getLicencePlate()}
                 });
             }
         }
