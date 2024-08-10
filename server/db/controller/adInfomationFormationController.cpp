@@ -32,7 +32,7 @@ std::string AdInformationFormationController::insertAdInformationFormation(std::
         }    
     }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr; 
+        return "FAIL"; 
     }
 
 }
@@ -42,7 +42,7 @@ std::string AdInformationFormationController::selectAdInformationFormationById(s
     std::string ret;
     try{
         auto jsonData = nlohmann::json::parse(data); 
-        int id = std::stoi(jsonData.at("id").get<std::string>());
+        int id =jsonData.at("id").get<int>();
         std::cout << "id: "<< id << std::endl;
         Ad_information_formation ad_info = dao->getAd_information_formationById(id);
         std::cout << 123123 << std::endl;
@@ -60,7 +60,7 @@ std::string AdInformationFormationController::selectAdInformationFormationById(s
         }
     }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr; 
+        return "FAIL"; 
     }
 }
 //3、根据id修改单条广告信息
@@ -82,14 +82,14 @@ std::string AdInformationFormationController::updateAdInformationFormationById(s
         }
     }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr; 
+        return "FAIL"; 
     }
 }
 //4、根据id删除单条广告信息
 std::string AdInformationFormationController::deleteAdInformationFormationById(std::string data){
     try{
         auto jsonData = nlohmann::json::parse(data);
-        int id =std::stoi(jsonData.at("id").get<std::string>());
+        int id =jsonData.at("id").get<int>();
         bool ret = dao->deleteaddAd_information_formation(id);
         if(ret){
             return "SUCCESS";
@@ -98,7 +98,7 @@ std::string AdInformationFormationController::deleteAdInformationFormationById(s
         }
     }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr; 
+        return "FAIL"; 
     }
 }
 //5、获取所有广告信息
@@ -120,7 +120,7 @@ std::string AdInformationFormationController::getAllAdInformationFormation(){
         }
     }catch(const std::exception& e){
         std::cerr << e.what() << '\n';
-        return nullptr; 
+        return "FAIL"; 
     }
     return jArray.dump();
 }
