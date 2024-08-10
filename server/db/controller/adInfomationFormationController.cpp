@@ -14,14 +14,14 @@ std::string AdInformationFormationController::insertAdInformationFormation(std::
         std::string name = jsonData.at("name").get<std::string>();
         std::string startTime = jsonData.at("start_date").get<std::string>();
         std::string expiratDate = jsonData.at("expirat_date").get<std::string>();
-        std::string content = jsonData.at("content").get<std::string>();
+        // std::string content = jsonData.at("content").get<std::string>();
         std::string phone = jsonData.at("phone").get<std::string>();
 
         Ad_information_formation adinfo;
         adinfo.setName(name);
         adinfo.setStartTime(startTime);
         adinfo.setExpiratDate(expiratDate);
-        adinfo.setContent(content);
+        adinfo.setContent("content");
         adinfo.setPhone(phone);
         std::cout << 111 << std::endl;
         bool res = dao->addAd_information_formation(adinfo);
@@ -51,7 +51,7 @@ std::string AdInformationFormationController::selectAdInformationFormationById(s
             j["name"] = ad_info.getName();
             j["start_date"] = ad_info.getStartTime();
             j["expirat_date"] = ad_info.getExpiratDate();
-            j["content"] = ad_info.getContent();
+            // j["content"] = ad_info.getContent();
             j["phone"] = ad_info.getPhone();
             ret = j.dump();
             return ret;
@@ -72,7 +72,7 @@ std::string AdInformationFormationController::updateAdInformationFormationById(s
         ad_info.setName(jsonData.at("name").get<std::string>());
         ad_info.setStartTime(jsonData.at("start_date").get<std::string>());
         ad_info.setExpiratDate(jsonData.at("expirat_date").get<std::string>());
-        ad_info.setContent(jsonData.at("content").get<std::string>());
+        ad_info.setContent("content");
         ad_info.setPhone(jsonData.at("phone").get<std::string>());
         bool ret = dao->updateaddAd_information_formation(ad_info);
         if(ret){
@@ -114,7 +114,7 @@ std::string AdInformationFormationController::getAllAdInformationFormation(){
             {"name", ad_info.getName()},
             {"start_date", ad_info.getStartTime()},
             {"expirat_date", ad_info.getExpiratDate()},
-            {"content", ad_info.getContent()},
+            // {"content", ad_info.getContent()},
             {"phone", ad_info.getPhone()},
             });
         }
