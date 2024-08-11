@@ -248,7 +248,18 @@ void MainWindow::on_picture_Bt_clicked()
 
     //上传qjson格式的数据
     QJsonObject contentObj;
-    contentObj["name"]= "upload_image.jpg";
+    // 获取当前日期和时间
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+
+    // 获取当前日期
+    QDate currentDate = currentDateTime.date();
+
+    // 获取当前时间
+    QTime currentTime = currentDateTime.time();
+    QString currentDateStr = currentDate.toString("yyyy-MM-dd");
+    QString currentTimeStr = currentTime.toString("HH-mm-ss");
+    QString str1 = QString("%1_%2.jpg").arg(currentDateStr).arg(currentTimeStr);
+    contentObj["name"]= str1;
     contentObj["size"]= imageData.size();
     QJsonObject rootObj;
     rootObj["image"] = contentObj;

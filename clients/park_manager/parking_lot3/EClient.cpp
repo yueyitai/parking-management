@@ -135,24 +135,57 @@ bool EClient::recvResponse(QString &responseStr)
     }
     qDebug() << "Expected response size:" << responseSize;
 
-    if (!socket->waitForReadyRead()) {
-        qDebug() << "Error waiting for response:" << socket->errorString();
-        return false;
-    }
-
     // 确保读取内容时，响应数据大小正确
-    QByteArray responseBuf(responseSize, 0);
-    qint64 bytesReadContent = socket->read(responseBuf.data(), responseSize);
-    if (bytesReadContent != responseSize) {
-        qDebug() << "Error reading response data: Expected" << responseSize << "bytes, but got" << bytesReadContent << "bytes.";
-        qDebug() << "Error message:" << socket->errorString();
-        return false;
+    QByteArray responseBuf;
+    while(responseBuf.size() < responseSize)
+    {
+        if (!socket->waitForReadyRead(500)) {
+            qDebug() << "Error waiting for response:" << socket->errorString();
+            return false;
+        }
+        QByteArray tempBuf = socket->readAll();
+        responseBuf.append(tempBuf);
     }
 
     responseStr = QString::fromUtf8(responseBuf);
     qDebug().noquote()<<responseStr;
     return true;
 }
+
+//bool EClient::recvResponse(QString &responseStr)
+//{
+//    // 等待数据准备好
+//    if (!socket->waitForReadyRead()) {
+//        qDebug() << "Error waiting for response:" << socket->errorString();
+//        return false;
+//    }
+//    // 读取响应数据的长度
+//    qint64 responseSize;
+//    qint64 bytesRead = socket->read(reinterpret_cast<char*>(&responseSize), sizeof(responseSize));
+//    if (bytesRead != sizeof(responseSize)) {
+//        qDebug() << "Error reading response size:" << socket->errorString();
+//        return false;
+//    }
+//    qDebug() << "Expected response size:" << responseSize;
+
+//    if (!socket->waitForReadyRead()) {
+//        qDebug() << "Error waiting for response:" << socket->errorString();
+//        return false;
+//    }
+
+//    // 确保读取内容时，响应数据大小正确
+//    QByteArray responseBuf(responseSize, 0);
+//    qint64 bytesReadContent = socket->read(responseBuf.data(), responseSize);
+//    if (bytesReadContent != responseSize) {
+//        qDebug() << "Error reading response data: Expected" << responseSize << "bytes, but got" << bytesReadContent << "bytes.";
+//        qDebug() << "Error message:" << socket->errorString();
+//        return false;
+//    }
+
+//    responseStr = QString::fromUtf8(responseBuf);
+//    qDebug().noquote()<<responseStr;
+//    return true;
+//}
 
 void EClient::analyzeResponse(const QString &responseStr, Response &response)
 {
