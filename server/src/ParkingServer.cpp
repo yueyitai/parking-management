@@ -73,11 +73,6 @@ bool ParkingServer::_handleData(int clientFD)
 		log_error("handle request thread error %s", e.what());
 	}
 
-	//while (true)
-	//{
-	//	sleep(5);
-	//}
-
 	log_debug("%s success", __FUNCTION__);
 	return true;
 }
@@ -183,7 +178,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 	{
 		log_info("requestOpt:%s", request.header.opt.c_str());
 
-		_createResponse(ECLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
+		_createResponse(ADCLIENT_UPDATE_ONE_INFO_BY_ID, request.header.opt, fd,request.body.data);
 
 		break;
 	}
@@ -266,30 +261,6 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 
 		break;
 	}
-	// case PCLIENT_DELETE_ONE_INFO_BY_PLATE:
-	// {
-	// 	log_info("requestOpt:%s", request.header.opt.c_str());
-
-	// 	_createResponse(PCLIENT_DELETE_ONE_INFO_BY_PLATE, request.header.opt, fd,request.body.data);
-
-	// 	break;
-	// }
-	// case PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE:
-	// {
-	// 	log_info("requestOpt:%s", request.header.opt.c_str());
-
-	// 	_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE, request.header.opt, fd,request.body.data);
-
-	// 	break;
-	// }
-	// case PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE:
-	// {
-	// 	log_info("requestOpt:%s", request.header.opt.c_str());
-
-	// 	_createResponse(PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE, request.header.opt, fd,request.body.data);
-
-	// 	break;
-	// }
 	/*--------------------VIP系统处理--------------------*/
 	//插入单条vip信息（注册）
 	case VIPCLIENT_INSERT_ONE_INFO:
@@ -535,22 +506,6 @@ void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int 
 	//插入单条广告信息
 	case ADCLIENT_INSERT_ONE_INFO:
 	{
-		// //数据库接口
-		// std::string outData;
-		// try
-		// {
-		// 	Ad_information_formationDAO dao;
-		// 	AdInformationFormationController controller(&dao);
-		// 	outData = controller.insertAdInformationFormation(inData);
-		// }
-		// catch(const std::exception& e)
-		// {
-		// 	log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
-		// }
-		
-		// if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
-		// else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_QUERY_ONE_INFO_BY_ID},outData };
-
 		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_INSERT_ONE_INFO},"outData" };
 
 		break;
@@ -668,86 +623,10 @@ void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int 
 	//插入单条停车信息
 	case PCLIENT_INSERT_ONE_INFO:
 	{
-		// //数据库接口
-		// std::string outData;
-		// try
-		// {
-		// 	ParkingRecordFormationDAO dao;
-		// 	ParkingRecordFormationController controller(&dao);
-		// 	outData = controller.usePark(inData);
-		// }
-		// catch(const std::exception& e)
-		// {
-		// 	log_error("[ECLIENT_GET_ALL_INFO]e operate error %s",e.what());
-		// }
-		
-		// if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_INSERT_ONE_INFO},outData };
-		// else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},outData };
-
 		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},"outData" };
 
 		break;
 	}
-	// case PCLIENT_DELETE_ONE_INFO_BY_PLATE:
-	// {
-	// 	//数据库接口
-	// 	std::string outData;
-	// 	try
-	// 	{
-	// 		ParkingRecordFormationDAO dao;
-	// 		ParkingRecordFormationController controller(&dao);
-	// 		outData = controller.usePark(inData);
-	// 	}
-	// 	catch(const std::exception& e)
-	// 	{
-	// 		log_error("[PCLIENT_DELETE_ONE_INFO_BY_PLATE]e operate error %s",e.what());
-	// 	}
-		
-	// 	if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_DELETE_ONE_INFO_BY_PLATE},outData };
-	// 	else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_DELETE_ONE_INFO_BY_PLATE},outData };
-
-	// 	break;
-	// }
-	// case PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE:
-	// {
-	// 	//数据库接口
-	// 	std::string outData;
-	// 	try
-	// 	{
-	// 		ParkingRecordFormationDAO dao;
-	// 		ParkingRecordFormationController controller(&dao);
-	// 		outData = controller.usePark(inData);
-	// 	}
-	// 	catch(const std::exception& e)
-	// 	{
-	// 		log_error("[PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE]e operate error %s",e.what());
-	// 	}
-		
-	// 	if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE},outData };
-	// 	else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE},outData };
-
-	// 	break;
-	// }
-	// case PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE:
-	// {
-	// 	//数据库接口
-	// 	std::string outData;
-	// 	try
-	// 	{
-	// 		ParkingRecordFormationDAO dao;
-	// 		ParkingRecordFormationController controller(&dao);
-	// 		outData = controller.usePark(inData);
-	// 	}
-	// 	catch(const std::exception& e)
-	// 	{
-	// 		log_error("[PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE]e operate error %s",e.what());
-	// 	}
-		
-	// 	if(outData == "FAIL") response = { {"FAIL",RESPONSE_RESULT_FAIL,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE},outData };
-	// 	else response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE},outData };
-
-	// 	break;
-	// }
 	/*--------------------VIP系统处理--------------------*/
 	//插入单条vip信息
 	case VIPCLIENT_INSERT_ONE_INFO:
@@ -858,30 +737,7 @@ void ParkingServer::_sendResponse(std::string& responseStr, int fd)
 
 	ret = send(fd, responseStr.c_str(), responseSize, 0);
 	log_debug("ret:%d", ret);
-
 }
-
-// void ParkingServer::_sendResponse(std::string& responseStr, int fd)
-//  { 
-// 	size_t responseSize = responseStr.length();
-// 	// 发送响应数据长度
-// 	ssize_t ret = send(fd, &responseSize, sizeof(responseSize), 0);
-// 	log_info("ret = %zd", ret);
-// 	if (ret != sizeof(responseSize))
-// 	{ 
-// 		log_debug("Error sending response size: ret = %zd", ret);
-// 		return;
-// 	}
-// 	// 发送响应数据
-// 	ret = send(fd, responseStr.c_str(), responseSize, 0);
-// 	log_info("ret = %zd", ret);
-// 	if (ret != responseSize) 
-// 	{ 
-// 		log_debug("Error sending response data: ret = %zd", ret);
-// 	}
-
-// 	sleep(1);
-// }
 
 //识别车牌
 bool ParkingServer::_recognizePlate(std::string& data,std::string& plateStr)
@@ -1000,8 +856,6 @@ bool ParkingServer::_sendPlate(int fd, std::string& plateStr)
 		return false;
 	}
 
-	//usleep(250000);
-
 	ret = send(fd, plateStr.c_str(), strlen, 0);
 	log_debug("ret:%d", ret);
 	if (ret < 0)
@@ -1009,8 +863,6 @@ bool ParkingServer::_sendPlate(int fd, std::string& plateStr)
 		log_error("send plateStr len error");
 		return false;
 	}
-	
-	//usleep(1000);
 
 	log_info("send plate success");
 	return true;
