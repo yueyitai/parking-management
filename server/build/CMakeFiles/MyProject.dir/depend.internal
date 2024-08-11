@@ -255,7 +255,6 @@ CMakeFiles/MyProject.dir/src/ClientManager.cpp.o
  ../inc/ClientManager.h
  ../inc/Epoll.h
  ../inc/TcpServer.h
- ../inc/cJSON.h
  ../inc/log.h
  /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ClientManager.cpp
 CMakeFiles/MyProject.dir/src/Epoll.cpp.o
@@ -282,7 +281,6 @@ CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o
  ../inc/ParkingServer.h
  ../inc/TcpServer.h
  ../inc/base64.h
- ../inc/cJSON.h
  ../inc/log.h
  ../tools/curl/curl.h
  ../tools/curl/curlver.h
@@ -365,6 +363,5 @@ CMakeFiles/MyProject.dir/src/main.cpp.o
  ../inc/Epoll.h
  ../inc/ParkingServer.h
  ../inc/TcpServer.h
- ../inc/cJSON.h
  ../inc/log.h
  /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/main.cpp

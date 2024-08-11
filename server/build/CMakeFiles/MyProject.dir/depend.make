@@ -254,7 +254,6 @@ CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/Client.h
 CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/ClientManager.h
 CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/Epoll.h
 CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/TcpServer.h
-CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/cJSON.h
 CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../inc/log.h
 CMakeFiles/MyProject.dir/src/ClientManager.cpp.o: ../src/ClientManager.cpp
 
@@ -281,7 +280,6 @@ CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/Epoll.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/ParkingServer.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/TcpServer.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/base64.h
-CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/cJSON.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../inc/log.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../tools/curl/curl.h
 CMakeFiles/MyProject.dir/src/ParkingServer.cpp.o: ../tools/curl/curlver.h
@@ -364,7 +362,6 @@ CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/ClientManager.h
 CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/Epoll.h
 CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/ParkingServer.h
 CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/TcpServer.h
-CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/cJSON.h
 CMakeFiles/MyProject.dir/src/main.cpp.o: ../inc/log.h
 CMakeFiles/MyProject.dir/src/main.cpp.o: ../src/main.cpp
 

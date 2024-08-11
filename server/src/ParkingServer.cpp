@@ -228,7 +228,6 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 		//发送车牌
 		if (!_sendPlate(fd, plateStr)) log_debug("send plate error");
 #endif
-
 		if(plateStr != "null")
 		{
 			log_debug("plateStr is not null");
@@ -256,8 +255,7 @@ void ParkingServer::_handleRequest(std::string requestStr, int fd)
 
 			log_debug("outData:%s",outData.c_str());
 		}
-
-		log_debug("plateStr is null");
+		else log_debug("plateStr is null");
 
 		break;
 	}
@@ -506,7 +504,7 @@ void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int 
 	//插入单条广告信息
 	case ADCLIENT_INSERT_ONE_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_INSERT_ONE_INFO},"outData" };
+		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,ADCLIENT_INSERT_ONE_INFO},"recv image info success, ready to recv image data" };
 
 		break;
 	}
@@ -623,7 +621,7 @@ void ParkingServer::_createResponse(enum optCode optCode, std::string& opt, int 
 	//插入单条停车信息
 	case PCLIENT_INSERT_ONE_INFO:
 	{
-		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},"outData" };
+		response = { {"SUCCESS",RESPONSE_RESULT_SUCCESS,opt,PCLIENT_INSERT_ONE_INFO},"recv image info success, ready to recv image data" };
 
 		break;
 	}

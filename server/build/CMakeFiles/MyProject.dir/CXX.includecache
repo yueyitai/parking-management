@@ -157,8 +157,6 @@ Epoll.h
 ../inc/Epoll.h
 TcpServer.h
 ../inc/TcpServer.h
-cJSON.h
-../inc/cJSON.h
 
 ../inc/Epoll.h
 cstring
@@ -191,8 +189,6 @@ log.h
 ../inc/base64.h
 iostream
 -
-
-../inc/cJSON.h
 
 ../inc/log.h
 stdio.h
@@ -1068,6 +1064,10 @@ stdint.h
 
 ../tools/nlohmann/thirdparty/hedley/hedley_undef.hpp
 
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ClientManager.cpp
+ClientManager.h
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ClientManager.h
+
 /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ParkingServer.cpp
 ParkingServer.h
 /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ParkingServer.h
@@ -1091,4 +1091,8 @@ fstream
 -
 curl/curl.h
 -
+
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/main.cpp
+ParkingServer.h
+/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ParkingServer.h
 

@@ -8,7 +8,6 @@
 #include "Client.h"
 #include "Epoll.h"
 #include "TcpServer.h"
-#include "cJSON.h"
 
 #define MAX_CLIENT 500
 
