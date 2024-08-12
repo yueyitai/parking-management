@@ -1064,10 +1064,6 @@ stdint.h
 
 ../tools/nlohmann/thirdparty/hedley/hedley_undef.hpp
 
-/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ClientManager.cpp
-ClientManager.h
-/mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ClientManager.h
-
 /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ParkingServer.cpp
 ParkingServer.h
 /mnt/hgfs/learning/coding/project/project_4/server_linux_env/src/ParkingServer.h

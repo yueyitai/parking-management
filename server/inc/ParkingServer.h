@@ -28,9 +28,6 @@ private:
 		//停车场管理系统对数据库的操作
 		PCLIENT_QUERY_ONE_INFO_BY_PLATE = 301,						//根据车牌查询单条信息
 		PCLIENT_INSERT_ONE_INFO,									//插入单条停车信息
-		// PCLIENT_DELETE_ONE_INFO_BY_PLATE,							//根据车牌删除单条停车信息（修改is_delete）
-		// PCLIENT_QUERY_PLATE_EXISTENCE_IN_EMPLOYEE_TABLE_BY_PLATE,	//根据车牌查询员工信息中是否存在该车牌
-		// PCLIENT_QUERY_PLATE_EXISTENCE_IN_VIP_TABLE_BY_PLATE,		//根据车牌查询vip信息中是否存在该车牌
 
 		//VIP管理系统对数据库的操作
 		VIPCLIENT_INSERT_ONE_INFO = 401,	//插入单条vip信息
